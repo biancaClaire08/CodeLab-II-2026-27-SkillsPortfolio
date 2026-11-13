@@ -10,6 +10,7 @@ root.config(bg="#1b2645") #sets the background color of the window
 
 # ===== HEADING SECTION USING AN IMAGE AND LABEL // FRAME 1 =====
 def displayMenu(): #function to display difficulty level menu
+    global main_frame
     main_frame = Frame(root, bg="#1b2645")
 
     img = Image.open('01-MathsQuiz/title.png') #opens the image file
@@ -32,7 +33,7 @@ def displayMenu(): #function to display difficulty level menu
 
     # ===== BUTTONS FOR EACH DIFFICULTY =====
     #three separate buttons were created with the white font and width of the button
-    button1 = Button(main_frame, text="Easy", bg="#131c35", fg="white", width=21, font=("Courier New", 12, "bold"))
+    button1 = Button(main_frame, text="Easy", bg="#131c35", fg="white", width=21, font=("Courier New", 12, "bold"), command=lambda: switch_frame(frame1))
     button1.pack(pady=5)
     button2 = Button(main_frame, text="Moderate", bg="#131c35", fg="white", width=21, font=("Courier New", 12, "bold"))
     button2.pack(pady=5)
@@ -41,6 +42,19 @@ def displayMenu(): #function to display difficulty level menu
 
     main_frame.pack() #displays the main_frame
 
-displayMenu() #displays the content under displayMenu() function
+displayMenu() #calls the function to display the content under displayMenu
+
+# ===== EASY DIFFICULTY FRAME =====
+frame1 = Frame(root,bg="#1b2645")
+label1 = Label(frame1, text = "EASY MODE", font=("Georgia", 28, "bold"), fg="#fde68a", bg="#1b2645")
+label1.pack()
+
+frame1.place(x=0, y=40, width=400, height=400)
+
+#function to switch between frames
+def switch_frame(frame):
+    frame.tkraise()
+
+switch_frame(main_frame)
 
 root.mainloop()
