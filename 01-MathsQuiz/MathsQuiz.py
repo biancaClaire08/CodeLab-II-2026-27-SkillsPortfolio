@@ -23,15 +23,22 @@ def randomInt(difficulty): #function for the number randomiser to give random qu
         num2 = random.randint(1000,9999) 
     return num1, num2
 
+def decideOperation(): #random operation sign
+    operation = ["+", "-"] #the options for operators
+    choice = random.choice(operation) #randomly selects from the operation choices
+    return choice
+
 
 def quiz_difficulty(difficulty): #function triggers when user clicks on the button difficulty
+    #calls the functions to obtain the number and operation
     num1, num2 = randomInt(difficulty)
+    choice = decideOperation() 
     switch_frame(frame1) #switches to frame 1 (where the quiz takes place)
 
     #label that outputs the difficulty (easy, moderate, advanced) along with mode, all in uppercase
     label1.config(text=difficulty.upper() + " MODE") 
 
-    question_label.config(text= f"{num1} + {num2} =")
+    question_label.config(text= f"{num1} {choice} {num2} =") #take the numbers and operations from the random module
 
 
 # ===== HEADING SECTION USING AN IMAGE AND LABEL // FRAME 1 =====
@@ -86,8 +93,8 @@ questionHeading_label = Label(frame1, text = "QUESTION", font= ("Helvetica",10, 
 score_label = Label(frame1, text = "SCORE: 0 / 100", font= ("Helvetica",10, "bold"), bg="#1b2645", fg="white")
 
 #absolute positioning using place
-questionHeading_label.place(x=58, y=85)
-score_label.place(x=240, y=85)
+questionHeading_label.place(x=58, y=75)
+score_label.place(x=240, y=75)
 
 #entry to allow the user to enter the answer for the given question
 answer_entry = Entry(frame1, font= ("Roboto",16), bg="#1b2645", fg="white", width = 22)
