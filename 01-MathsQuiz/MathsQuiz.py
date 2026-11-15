@@ -2,6 +2,10 @@
 from tkinter import *
 from PIL import ImageTk, Image
 
+#import messagebox
+import tkinter.messagebox
+from tkinter import messagebox
+
 import random #import random module
 
 root = Tk()
@@ -33,6 +37,7 @@ def selectedDifficulty(difficulty_selected):
     difficulty=difficulty_selected
     #label that outputs the difficulty (easy, moderate, advanced) along with mode, all in uppercase
     label1.config(text=difficulty.upper() + " MODE")
+    messagebox.showinfo("Difficulty Selected", f"You selected {difficulty_selected} Mode.")
 
     #initialising the score, question counter and attempt for each question
     score=0
@@ -124,6 +129,12 @@ def displayResults():
 
     results_label.config(text=f"{score}")
     grade_label.config(text=f"You have achieved an {grade} grade")
+
+def playAgain(): #function to ask whether the user wants to play again using message box
+    answer = messagebox.askyesno("Confirm", "Do you want to play again?")
+
+    if answer:
+        displayMenu()
 
 # ===== HEADING SECTION USING AN IMAGE AND LABEL // FRAME 1 =====
 def displayMenu(): #function to display difficulty level menu
@@ -217,7 +228,7 @@ grade_label = Label(frame2, text="", font=("Roboto",10), bg="#1b2645", fg="#fde6
 grade_label.pack(pady=5)
 
 #play again button to allow user to play the quiz again
-play_button = Button(frame2, text = "PLAY AGAIN", font= ("Helvetica",18, "bold"), bg="white", fg="black", command=displayMenu)
+play_button = Button(frame2, text = "PLAY AGAIN", font= ("Helvetica",18, "bold"), bg="white", fg="black", command=playAgain)
 play_button.pack(pady=22)
 
 #function to switch between frames
