@@ -38,6 +38,9 @@ def selectedDifficulty(difficulty_selected):
     score=0
     question_counter = 0
     number_of_attempts=1
+    #resets the score and label for the next quiz (if the user plays again)
+    score_label.config(text=f"SCORE: {score}/100")
+    label2.config(text="")
     question = False
 
     displayProblem() #calls the displayProblem function
@@ -51,7 +54,8 @@ def displayProblem(): #function triggers when user clicks on the button difficul
     if question == False:
         #condition to check whether 10 questions have been displayed
         if question_counter >=10:
-            return "done"
+            displayResults()
+            return
 
         number_of_attempts = 1 #resets the attempt after every new question
         question_counter+=1 #increments after one question is done
@@ -64,6 +68,8 @@ def displayProblem(): #function triggers when user clicks on the button difficul
             correct_answer = num1+num2
         else:
             correct_answer = num1-num2
+
+        questionHeading_label.config(text=f"Question {question_counter}")
 
         question_label.config(text= f"{num1} {operation_choice} {num2} =") #take the numbers and operations from the random module
 
@@ -85,6 +91,8 @@ def displayProblem(): #function triggers when user clicks on the button difficul
         else:
             score+=5 #five points added for being correct on the second attempt 
             label2.config(text = "Correct. +5 points added")
+
+        score_label.config(text=f"SCORE: {score}/100")
         question=False #set to False when the question has been completed (will help move on to the next question)
     else:
         if number_of_attempts == 1: #another attempt to the user if the first answer is incorrect
@@ -98,6 +106,24 @@ def displayProblem(): #function triggers when user clicks on the button difficul
     if question==False: #displays the next question when the current question is done
         displayProblem()
 
+
+def displayResults():
+    switch_frame(frame2)
+    if score >= 90:
+        grade = "A+"
+    elif score >= 80:
+        grade = "A"
+    elif score >= 70:
+        grade = "B"
+    elif score >=60:
+        grade = "C"
+    elif score >= 50:
+        grade = "D"
+    else:
+        grade ="F"
+
+    results_label.config(text=f"{score}")
+    grade_label.config(text=f"You have achieved an {grade} grade")
 
 # ===== HEADING SECTION USING AN IMAGE AND LABEL // FRAME 1 =====
 def displayMenu(): #function to display difficulty level menu
@@ -135,7 +161,7 @@ def displayMenu(): #function to display difficulty level menu
 
 displayMenu() #calls the function to display the content under displayMenu
 
-# ===== EASY DIFFICULTY FRAME =====
+# ===== FRAME ONE FOR THE MAIN QUIZ SECTION =====
 frame1 = Frame(root,bg="#1b2645")
 frame1.place(x=0, y=0, width=400, height=400)
 
@@ -147,8 +173,8 @@ line1.pack()
 
 
 #using labels for the heading question and score
-questionHeading_label = Label(frame1, text = "QUESTION", font= ("Helvetica",10, "bold"), bg="#1b2645", fg="white")
-score_label = Label(frame1, text = "SCORE: 0 / 100", font= ("Helvetica",10, "bold"), bg="#1b2645", fg="white")
+questionHeading_label = Label(frame1, text = "", font= ("Helvetica",10, "bold"), bg="#1b2645", fg="white")
+score_label = Label(frame1, text = "", font= ("Helvetica",10, "bold"), bg="#1b2645", fg="white")
 
 #absolute positioning using place
 questionHeading_label.place(x=58, y=75)
@@ -168,8 +194,31 @@ question_label.place(y=180, x=200, anchor= "center")
 
 #message label to tell the user what to do
 label2 = Label(frame1, text="", font= ("Roboto",9), bg="#1b2645", fg="white")
-label2.place(y=210, x=128)
+label2.place(y=210, x=126)
 
+# ===== FRAME TWO FOR THE RESULTS SECTION =====
+frame2 = Frame(root,bg="#1b2645")
+frame2.place(x=0, y=0, width=400, height=400)
+
+img1 = Image.open('01-MathsQuiz/title1.png')
+resized_img1 = img1.resize((420,120))
+new_img1 = ImageTk.PhotoImage(resized_img1)
+Label (frame2, image = new_img1, bg="#1b2645").pack(pady=(20,0))
+
+#score heading
+score_heading = Label(frame2, text = "YOUR SCORE", font=("Georgia", 16, "bold"), bg="#1b2645", fg="#fde68a")
+score_heading.pack(pady=2)
+#results label, to display the final score
+results_label = Label(frame2, text= "", font=("Georgia", 16, "bold"), bg="#1b2645",fg="#fde68a")
+results_label.pack(pady=4)
+crown_label = Label(frame2, text="🜲", font=("Georgia",22), bg="#1b2645",fg="#fde68a").pack() #crown emoticon (for design purposes)
+#displays the user's final grade based on the score
+grade_label = Label(frame2, text="", font=("Roboto",10), bg="#1b2645", fg="#fde68a")
+grade_label.pack(pady=5)
+
+#play again button to allow user to play the quiz again
+play_button = Button(frame2, text = "PLAY AGAIN", font= ("Helvetica",18, "bold"), bg="white", fg="black", command=displayMenu)
+play_button.pack(pady=22)
 
 #function to switch between frames
 def switch_frame(frame):
