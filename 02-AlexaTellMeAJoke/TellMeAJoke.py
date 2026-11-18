@@ -32,8 +32,10 @@ def tell_joke():
     #display the setup of the joke
     setup_label.config(text=setup[index])
 
-setup_label = Label(root, text = "")
-punchline_label = Label(root, text="")
+#function to close the window
+def quit():
+    root.destroy()
+
 
 #title displayed using label
 title = Label(root,text="ALEXA'S JOKES", font=("Courier",24,"bold"), bg="#c0c0c0", fg="black")
@@ -57,8 +59,15 @@ button3 = Button(root, text="Next Joke", font=("Arial", 12), bg="#545454", fg="w
 button3.pack(side="left", padx=10)
 
 #button to close the application
-close_button = Button(root, text="X", font=("Arial", 12), bg="#545454", fg="white", padx=3, pady=1, cursor = "hand2") 
+close_button = Button(root, text="X", font=("Arial", 12), bg="#545454", fg="white", padx=3, pady=1, cursor = "hand2", command=quit) 
 close_button.place(x=500, y=10)
 
+#label to display the joke setup
+setup_label = Label(root, text = ("This is the line of joke"), font=("Roboto", 20, "bold"), bg="#526B5D", fg="black")
+setup_label.place(relx=0.5, y=190, anchor="center") #relx positions the label at 50% point of the entire window's width
+
+#label to display the joke punchline
+punchline_label = Label(root, text = ("The punchline of the joke"), font=("Roboto", 11), bg="#526B5D", fg="black")
+punchline_label.place(relx=0.5, y=225, anchor="center")
 
 root.mainloop()
