@@ -1,0 +1,64 @@
+{
+    "Student Details": [
+        {
+            "student_id": 1345,
+            "student_name": "John Curry",
+            "course_marks": [8,15,7],
+            "examination_mark": 45
+        },
+        {
+            "student_id": 2345,
+            "student_name": "Sam Sturtivant",
+            "course_marks": [14,15,14],
+            "examination_mark": 77
+        },
+        {
+            "student_id": 9876,
+            "student_name": "Lee Scott",
+            "course_marks": [17,11,16],
+            "examination_mark": 99
+        },
+        {
+            "student_id": 3724,
+            "student_name": "Matt Thompson",
+            "course_marks": [19,11,15],
+            "examination_mark": 81
+        },
+        {
+            "student_id": 1212,
+            "student_name": "Ron Herrema",
+            "course_marks": [14,17,18],
+            "examination_mark": 66
+        },
+        {
+            "student_id": 8439,
+            "student_name": "Jake Hobbs",
+            "course_marks": [10,11,10],
+            "examination_mark": 43
+        },
+        {
+            "student_id": 2344,
+            "student_name": "Jo Hyde",
+            "course_marks": [6,15,10],
+            "examination_mark": 55
+        },
+        {
+            "student_id": 9384,
+            "student_name": "Gareth Southgate",
+            "course_marks": [5,6,8],
+            "examination_mark": 33
+        },
+        {
+            "student_id": 8327,
+            "student_name": "Alan Shearer",
+            "course_marks": [20,20,20],
+            "examination_mark": 100
+        },
+        {
+            "student_id": 2983,
+            "student_name": "Les Ferdinand",
+            "course_marks": [15,17,18],
+            "examination_mark": 92
+        }
+    ]
+}
