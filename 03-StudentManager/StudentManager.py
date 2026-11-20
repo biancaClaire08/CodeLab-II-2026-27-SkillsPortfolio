@@ -213,6 +213,61 @@ def add_student():
 
     Button(frame1, text="Add Student", font=("bold",10), width=18, bg="#17243a", fg="white", command=lambda: add_student_details(new_id, new_name, new_mark1, new_mark2, new_mark3, new_examMark, frame1)).grid(row=7, column=0, columnspan=2, pady=8)
 
+def read():
+    students = []
+    with open('./03-StudentManager/student.txt','r') as file:
+        for line in file:
+            details=line.strip().split(",") #.strip() gets rid of unwanted characters on both ends 
+
+            #stores the read data into the corresponding variables
+            student = { "student_id": details[0],
+                "student_name":details[1],
+                "course_marks": [
+                    int(details[2]),
+                    int(details[3]),
+                    int(details[4])
+                ],
+                "examination_mark": int(details[5])}
+            students.append(student) #append the data into the students array
+    return students
+
+def delete():
+    frame2 = Toplevel(root)
+    frame2.title("Delete a Student Record")
+    frame2.geometry("250x100")
+    frame2.resizable(0,0)
+
+    Label(frame2, text="Enter Student ID:").place(x=10, y=20)
+    studentID_entry = Entry(frame2)
+    studentID_entry.place(x=110, y=20)
+    Button(frame2, text="Delete", bg="#17243a", fg="white", font=("bold",8), command=lambda: delete_confirmation(studentID_entry, frame2)).place(x=195, y=50)
+
+def delete_confirmation(studentID_entry, frame2):
+    student_id = studentID_entry.get()
+    students = read()
+    student_found = False #boolean variable set to False initially
+    confirm= False
+    for student in students:
+        if student["student_id"].strip() == student_id.strip(): #compares the entered ID with the student ID database
+            student_found = True
+            confirm = messagebox.askyesno("Confirm", "Are you sure you want to delete " + student["student_name"] + "?")
+
+            if confirm==True:
+                students.remove(student) #delete this student from the list 
+            break
+    if student_found == False:
+        messagebox.showinfo("", "Student not found")
+
+    if confirm==True:
+        #open file in write mode
+        with open('./03-StudentManager/student.txt','w') as file:
+            #loop through the updated students array after the deletion
+            for student in students: #update and write student's deatils into the text file
+                file.write(student["student_id"] + "," + student["student_name"] +
+                           "," + str(student["course_marks"][0]) + "," + str(student["course_marks"][1]) +
+                           "," + str(student["course_marks"][2]) + "," + str(student["examination_mark"]) + "\n")
+
+        messagebox.showinfo("", "Student record has been successfuly deleted")
 
 
 
@@ -263,8 +318,11 @@ def modify():
     heading2 = Label(modify_frame, text="Sorting Records", font=("Courier",26, "bold"), bg="#FFFFFF", fg="black")
     heading2.pack(anchor='w', padx=10)
 
-    sort_btn = Button(modify_frame, text="Add Student Record", font=("Times", 18), bg="black", fg="#FFFFFF", padx=27, pady=5, width=80, command=add_student)
-    sort_btn.pack(anchor='w', padx=10, pady=(30,10))
+    add_btn = Button(modify_frame, text="Add Student Record", font=("Times", 18), bg="black", fg="#FFFFFF", padx=27, pady=5, width=80, command=add_student)
+    add_btn.pack(anchor='w', padx=10, pady=(30,10))
+    del_btn = Button(modify_frame, text="Delete Student Record", font=("Times", 18), bg="black", fg="#FFFFFF", padx=27, pady=5, width=80, command=delete)
+    del_btn.pack(anchor='w', padx=10, pady=(0,10))
+    
     modify_frame.pack(anchor='w', padx=10, pady=15)
 
 
