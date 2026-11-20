@@ -3,7 +3,7 @@ from PIL import ImageTk, Image #import img module
 import json #import JSON module
 
 root = Tk()
-root.geometry('995x580')
+root.geometry('995x640')
 #avoid resizing the window
 root.resizable(0,0)
 root.title('Student Manager')
@@ -15,7 +15,7 @@ with open("03-StudentManager/studentMarks.json","r") as file:
 
 def view_records(): #function to display student records
     record_frame = Frame(root) #create a frame inside the root window
-    record_frame.place(relx=0.6,rely=0.72,anchor="center")
+    record_frame.place(relx=0.6,rely=0.7,anchor="center")
     
     #headings for the table
     Label(record_frame, text="Student No.", width=10).grid(row=25, column=1)
@@ -68,6 +68,17 @@ def view_records(): #function to display student records
     Label(record_frame, text="Average Percentage: " + str(average)).grid(row=row+1, column=1)
 
 
+def individual_record():
+    global search_frame 
+    #open a new separate window while keeping the main window open
+    search_frame = Toplevel(root)
+    search_frame.title("Searching Record")
+    search_frame.geometry("450x200")
+    
+    student_id = Label(search_frame, text="Enter Student ID:").grid(row=0, column=0, padx=10, pady=10)
+    id_entry = Entry(search_frame, width=30).grid(row=0, column=1, padx=10, pady=10)
+    search_btn = Button(search_frame, text="Search Student ID", font=("bold",8), width=16, bg="#162236", fg="white").grid(row=0, column=2, padx=15)
+
 # ===== FUNCTIONS FOR FRAMES =====
 def home_page():
     delete_pages()
@@ -77,7 +88,7 @@ def home_page():
     
     button1 = Button(home_frame, text="View all student records", font=("Times", 12), bg="black", fg="#FFFFFF", padx=27, pady=5, width=30, command=view_records)
     button1.pack(anchor='w', padx=10, pady=(30,10))
-    button2 = Button(home_frame, text="View individual student record", font=("Times", 12), bg="black", fg="#FFFFFF", padx=27, pady=5, width=30)
+    button2 = Button(home_frame, text="View individual student record", font=("Times", 12), bg="black", fg="#FFFFFF", padx=27, pady=5, width=30, command=individual_record)
     button2.pack(anchor='w', padx=10)
 
     img = Image.open('03-StudentManager/student.jpg')
@@ -97,18 +108,19 @@ def delete_pages():
 # ===== FRAMES =====
 frame = Frame(root, bg= "#162236", width=995, height=60)
 frame.pack()
-options_frame = Frame(root, bg= '#202f46', width=200, height=520) #side dashboard frame for the buttons
+options_frame = Frame(root, bg= '#202f46', width=200, height=640) #side dashboard frame for the buttons
 options_frame.pack(side=LEFT)
 
-main_frame = Frame(root, bg="#FFFFFF", width=995, height=510) #frame to display the main content
+main_frame = Frame(root, bg="#FFFFFF", width=995, height=640) #frame to display the main content
 main_frame.pack(side=LEFT) #positioning of main_frame will be beside the option_frame on the available space
 main_frame.pack_propagate(False) #prevent the frame from automatically resizing
+
 
 # ===== BUTTONS =====
 home_btn = Button(options_frame, text="HOME", font=("Tahoma",11, "bold"), fg="white", bg='#202f46', bd=0, command=home_page) #bd removes the border around the button
 home_btn.place(x=20, y=50)
 
-score_btn = Button(options_frame, text="LEADERBOARD", font=("Tahoma", 11, "bold"),fg="white", bg='#202f46', bd=0)
+score_btn = Button(options_frame, text="SCORE", font=("Tahoma", 11, "bold"),fg="white", bg='#202f46', bd=0, command=score_page)
 score_btn.place(x=20, y=110)
 
 sort_btn = Button(options_frame, text="SORT RECORDS", font=("Tahoma", 11, "bold"),fg="white", bg='#202f46', bd=0)
