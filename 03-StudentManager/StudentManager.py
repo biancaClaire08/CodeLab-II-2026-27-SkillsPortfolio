@@ -177,6 +177,45 @@ def lowest_score(scores_frame):
     display_record(lowest_student, scores_frame)
 
 
+# ===== TEXT FILE RELATED FUNCTION (RELATED TO ITEMS 6,7 AND 8) =====
+def add_student_details(new_id, new_name, new_mark1, new_mark2, new_mark3, new_examMark, frame1):
+    #append the text file without overwriting the current information in the file
+    with open('./03-StudentManager/student.txt', 'a') as file:
+        file.write(new_id.get() + "," + new_name.get() + "," + new_mark1.get() + "," +
+                   new_mark2.get() + "," + new_mark3.get() + "," + new_examMark.get() + "\n") #new student data is added to the file (same format as the rest of the students)
+    messagebox.showinfo("","Student has been successfully added")
+
+def add_student():
+    frame1 = Toplevel(root)
+    frame1.title("Add a Student")
+    frame1.geometry("400x450")
+    frame1.resizable(0,0)
+
+    #entry to allow user to enter the details
+    Label(frame1, text="Student ID:").grid(row=1, column=0, padx=8, pady=2, sticky='e')
+    new_id = Entry(frame1, width=42)
+    new_id.grid(row=1, column=1, sticky='w')
+    Label(frame1, text="Student Name:").grid(row=2, column=0, padx=8, pady=2, sticky='e')
+    new_name = Entry(frame1, width=42)
+    new_name.grid(row=2, column=1)
+    Label(frame1, text="Coursework 1 Marks:").grid(row=3, column=0, padx=8, pady=2, sticky='e')
+    new_mark1 = Entry(frame1, width=42)
+    new_mark1.grid(row=3, column=1)
+    Label(frame1, text="Coursework 2 Marks:").grid(row=4, column=0, padx=8, pady=2, sticky='e')
+    new_mark2 = Entry(frame1, width=42)
+    new_mark2.grid(row=4, column=1)
+    Label(frame1, text="Coursework 3 Marks:").grid(row=5, column=0, padx=8, pady=2, sticky='e')
+    new_mark3 = Entry(frame1, width=42)
+    new_mark3.grid(row=5, column=1)
+    Label(frame1, text="Examination Marks:").grid(row=6, column=0, padx=8, pady=2, sticky='e')
+    new_examMark = Entry(frame1, width=42)
+    new_examMark.grid(row=6, column=1)
+
+    Button(frame1, text="Add Student", font=("bold",10), width=18, bg="#17243a", fg="white", command=lambda: add_student_details(new_id, new_name, new_mark1, new_mark2, new_mark3, new_examMark, frame1)).grid(row=7, column=0, columnspan=2, pady=8)
+
+
+
+
 # ===== FUNCTIONS FOR FRAMES =====
 def home_page():
     delete_pages()
@@ -218,10 +257,21 @@ def scores_page():
     
     scores_frame.pack(anchor='w', padx=10, pady=15)
 
+def modify():
+    delete_pages()
+    modify_frame = Frame(main_frame, bg="white")
+    heading2 = Label(modify_frame, text="Sorting Records", font=("Courier",26, "bold"), bg="#FFFFFF", fg="black")
+    heading2.pack(anchor='w', padx=10)
+
+    sort_btn = Button(modify_frame, text="Add Student Record", font=("Times", 18), bg="black", fg="#FFFFFF", padx=27, pady=5, width=80, command=add_student)
+    sort_btn.pack(anchor='w', padx=10, pady=(30,10))
+    modify_frame.pack(anchor='w', padx=10, pady=15)
+
 
 def delete_pages():
     for frame in main_frame.winfo_children(): #loop through the frames inside main_frame
         frame.destroy() #removes the frame from the window
+
 
 
 # ===== FRAMES =====
@@ -246,7 +296,7 @@ score_btn.place(x=20, y=110)
 sort_btn = Button(options_frame, text="SORT RECORDS", font=("Tahoma", 11, "bold"),fg="white", bg='#202f46', bd=0)
 sort_btn.place(x=20, y=170)
 
-modify_btn = Button(options_frame, text="MODIFY", font=("Tahoma", 11, "bold"),fg="white", bg='#202f46', bd=0)
+modify_btn = Button(options_frame, text="MODIFY", font=("Tahoma", 11, "bold"),fg="white", bg='#202f46', bd=0, command=modify)
 modify_btn.place(x=20, y=230)
 
 home_page()
