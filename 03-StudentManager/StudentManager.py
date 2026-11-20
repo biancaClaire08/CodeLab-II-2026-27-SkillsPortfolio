@@ -9,6 +9,7 @@ root.geometry('995x640')
 #avoid resizing the window
 root.resizable(0,0)
 root.title('Student Manager')
+root.iconbitmap('./03-StudentManager/icon3.ico')
 
 # ===== FUNCTIONS INVOLVING JSON FILE AND IN THE HOME SECTION OF THE WINDOW =====
 #open and reads the JSON file
@@ -268,8 +269,6 @@ def delete_confirmation(studentID_entry, frame2):
                            "," + str(student["course_marks"][2]) + "," + str(student["examination_mark"]) + "\n")
 
         messagebox.showinfo("", "Student record has been successfuly deleted")
-
-
 
 # ===== FUNCTIONS FOR FRAMES =====
 def home_page():

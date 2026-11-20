@@ -6,6 +6,7 @@ root = Tk()
 root.geometry("550x450")
 root.title("Alexa Tell me a Joke")
 root.config(bg="#c0c0c0")
+root.iconbitmap('./02-AlexaTellMeAJoke/icon2.ico')
 
 #empty lists
 setup = []

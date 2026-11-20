@@ -13,6 +13,7 @@ root = Tk()
 root.geometry("400x400")
 root.title("Arithmetic Quiz")
 root.config(bg="#1b2645") #sets the background color of the window
+root.iconbitmap('./01-MathsQuiz/icon1.ico')
 
 # ===== FUNCTIONS =====
 def randomInt(difficulty): #function for the number randomiser to give random questions to the user
