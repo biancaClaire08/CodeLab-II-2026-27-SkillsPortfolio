@@ -1,6 +1,8 @@
 from tkinter import * #import tkinter
 from PIL import ImageTk, Image #import img module
 import json #import JSON module
+import tkinter.messagebox
+from tkinter import messagebox
 
 root = Tk()
 root.geometry('995x640')
@@ -12,6 +14,26 @@ root.title('Student Manager')
 #open and reads the JSON file
 with open("03-StudentManager/studentMarks.json","r") as file:
     data = json.load(file)
+
+#calculate the total marks, percentage and grade
+def calculate_results(student):
+    total_coursework = student["course_marks"][0] + student["course_marks"][1] + student["course_marks"][2] #adds the marks in course_marks in the JSON file
+    exam_mark = student["examination_mark"]
+
+    percentage = ((total_coursework + exam_mark) / 160) * 100
+    #grade assigned based on the percentage calculated
+    if percentage >=70:
+        grade = "A"
+    elif percentage >=60:
+        grade = "B"
+    elif percentage >=50:
+        grade = "C"
+    elif percentage >=40:
+        grade = "D"
+    else:
+        grade = "F"
+
+    return total_coursework, exam_mark, percentage, grade
 
 def view_records(): #function to display student records
     record_frame = Frame(root) #create a frame inside the root window
@@ -31,23 +53,10 @@ def view_records(): #function to display student records
     for student in data["Student Details"]:
         student_no = student["student_id"]
         student_name = student["student_name"]
-        total_coursework = student["course_marks"][0] + student["course_marks"][1] + student["course_marks"][2] #adds the marks in course_marks in the JSON file
-        exam_mark = student["examination_mark"]
         
-        percentage = ((total_coursework + exam_mark) / 160) * 100
+        total_coursework, exam_mark, percentage, grade = calculate_results(student)        
         total_percentage = total_percentage + percentage
         percentage1 = str(percentage) + "%"
-        #grade assigned based on the percentage calculated
-        if percentage >=70:
-            grade = "A"
-        elif percentage >=60:
-            grade = "B"
-        elif percentage >=50:
-            grade = "C"
-        elif percentage >=40:
-            grade = "D"
-        else:
-            grade = "F"
 
         #inserting the student data into the table
         Label(record_frame, text=student_no, width=10).grid(row=row, column=1)
@@ -68,16 +77,56 @@ def view_records(): #function to display student records
     Label(record_frame, text="Average Percentage: " + str(average)).grid(row=row+1, column=1)
 
 
+def search_student(id_entry):
+    student_id_entered = id_entry.get()
+    student_found = False
+    student_details = None #no student details stored
+
+    for student in data["Student Details"]:
+        if str(student["student_id"]) == student_id_entered:
+            student_found = True
+            student_details = student
+            break
+    if student_found == False:
+        messagebox.showinfo("Invalid", "Student not found")
+
+    if student_found == True:
+        total_coursework, exam_mark, percentage, grade = calculate_results(student)        
+
+        #heading in column 1 with the student's information in column 2
+        Label(search_frame, text="Student No.").grid(row=1, column=0, padx=10)
+        Label(search_frame, text=student_details["student_id"]).grid(row=1, column=1)
+        
+        Label(search_frame, text="Student Name", width=22).grid(row=2, column=0)
+        Label(search_frame, text=student_details["student_name"]).grid(row=2, column=1)
+        
+        Label(search_frame, text="Total Coursework Mark", width=22).grid(row=3, column=0)
+        Label(search_frame, text=total_coursework).grid(row=3, column=1)
+
+        Label(search_frame, text="Exam Mark", width=22).grid(row=4, column=0)
+        Label(search_frame, text=exam_mark).grid(row=4, column=1)
+        
+        Label(search_frame, text="Overall Percentage", width=22).grid(row=5, column=0)
+        Label(search_frame, text=str(percentage) + "%").grid(row=5, column=1)
+
+        Label(search_frame, text="Grade", width=22).grid(row=6, column=0)
+        Label(search_frame, text=grade).grid(row=6, column=1)
+     
+
 def individual_record():
     global search_frame 
     #open a new separate window while keeping the main window open
     search_frame = Toplevel(root)
     search_frame.title("Searching Record")
-    search_frame.geometry("450x200")
+    search_frame.geometry("500x200")
+    search_frame.resizable(0,0)
     
-    student_id = Label(search_frame, text="Enter Student ID:").grid(row=0, column=0, padx=10, pady=10)
-    id_entry = Entry(search_frame, width=30).grid(row=0, column=1, padx=10, pady=10)
-    search_btn = Button(search_frame, text="Search Student ID", font=("bold",8), width=16, bg="#162236", fg="white").grid(row=0, column=2, padx=15)
+    id_label = Label(search_frame, text="Enter Student ID:", anchor='w').grid(row=0, column=0, padx=10, pady=10)
+    id_entry = Entry(search_frame, width=30)
+    id_entry.grid(row=0, column=1, padx=10, pady=10)
+    search_btn = Button(search_frame, text="Search Student ID", font=("bold",8), width=16, bg="#162236", fg="white", command=lambda: search_student(id_entry))
+    search_btn.grid(row=0, column=2, padx=15)
+
 
 # ===== FUNCTIONS FOR FRAMES =====
 def home_page():
@@ -120,7 +169,7 @@ main_frame.pack_propagate(False) #prevent the frame from automatically resizing
 home_btn = Button(options_frame, text="HOME", font=("Tahoma",11, "bold"), fg="white", bg='#202f46', bd=0, command=home_page) #bd removes the border around the button
 home_btn.place(x=20, y=50)
 
-score_btn = Button(options_frame, text="SCORE", font=("Tahoma", 11, "bold"),fg="white", bg='#202f46', bd=0, command=score_page)
+score_btn = Button(options_frame, text="SCORE", font=("Tahoma", 11, "bold"),fg="white", bg='#202f46', bd=0)
 score_btn.place(x=20, y=110)
 
 sort_btn = Button(options_frame, text="SORT RECORDS", font=("Tahoma", 11, "bold"),fg="white", bg='#202f46', bd=0)
