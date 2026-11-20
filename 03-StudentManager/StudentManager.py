@@ -36,8 +36,8 @@ def calculate_results(student):
     return total_coursework, exam_mark, percentage, grade
 
 def view_records(): #function to display student records
-    record_frame = Frame(root) #create a frame inside the root window
-    record_frame.place(relx=0.6,rely=0.7,anchor="center")
+    record_frame = Frame(main_frame) #create a frame inside the root window
+    record_frame.place(relx=0.5,rely=0.65,anchor="center")
     
     #headings for the table
     Label(record_frame, text="Student No.", width=10).grid(row=25, column=1)
@@ -128,6 +128,55 @@ def individual_record():
     search_btn.grid(row=0, column=2, padx=15)
 
 
+# ===== FUNCTION INVOLVING STUDENT SCORES FOR HIGHEST AND LOWEST =====
+def display_record(student, score_frame):
+    result_frame = Frame(score_frame)
+    result_frame.pack(pady=25)
+    total_coursework, exam_mark, percentage, grade = calculate_results(student)
+
+    #exact format to display the details of the student
+    Label(result_frame, text="Student No.").grid(row=1, column=0, padx=10)
+    Label(result_frame, text= student["student_id"]).grid(row=1, column=1)     
+    Label(result_frame, text="Student Name", width=22).grid(row=2, column=0)
+    Label(result_frame, text= student["student_name"]).grid(row=2, column=1)
+    Label(result_frame, text="Total Coursework Mark", width=22).grid(row=3, column=0)
+    Label(result_frame, text=total_coursework).grid(row=3, column=1)
+    Label(result_frame, text="Exam Mark", width=22).grid(row=4, column=0)
+    Label(result_frame, text=exam_mark).grid(row=4, column=1)
+    Label(result_frame, text="Overall Percentage", width=22).grid(row=5, column=0)
+    Label(result_frame, text=str(percentage) + "%").grid(row=5, column=1) 
+    Label(result_frame, text="Grade", width=22).grid(row=6, column=0)
+    Label(result_frame, text=grade).grid(row=6, column=1)
+
+def highest_score(scores_frame):
+    highest_score = 0
+    highest_student = None
+
+    for student in data["Student Details"]:
+        total_coursework, exam_mark, percentage, grade = calculate_results(student)
+
+        #calculate the total score
+        total_score = total_coursework + exam_mark
+        #check if the current total score is greater than the highest score
+        if total_score > highest_score:
+            highest_score = total_score
+            highest_student = student
+    display_record(highest_student, scores_frame)
+
+def lowest_score(scores_frame):
+    lowest_score = 99999999 
+    lowest_student = None
+
+    for student in data["Student Details"]:
+        total_coursework, exam_mark, percentage, grade = calculate_results(student)
+
+        total_score = total_coursework + exam_mark
+        if total_score < lowest_score:
+            lowest_score = total_score
+            lowest_student = student
+    display_record(lowest_student, scores_frame)
+
+
 # ===== FUNCTIONS FOR FRAMES =====
 def home_page():
     delete_pages()
@@ -149,6 +198,27 @@ def home_page():
 
     home_frame.pack(anchor='w', padx=10, pady=15)
 
+def scores_page():
+    delete_pages()
+    scores_frame = Frame(main_frame, bg="white")
+    heading1 = Label(scores_frame, text="Student Scores", font=("Courier",26, "bold"), bg="#FFFFFF", fg="black")
+    heading1.pack(anchor='w', padx=10)
+
+    button1 = Button(scores_frame, text="Highest Scoring Student", font=("Times", 12), bg="black", fg="#FFFFFF", padx=27, pady=5, width=30, command=lambda: highest_score(scores_frame))
+    button1.pack(anchor='w', padx=10, pady=(30,10))
+    button2 = Button(scores_frame, text="Lowest Scoring Student", font=("Times", 12), bg="black", fg="#FFFFFF", padx=27, pady=5, width=30, command=lambda: lowest_score(scores_frame))
+    button2.pack(anchor='w', padx=10)
+
+    img = Image.open('03-StudentManager/img1.jpg')
+    resized_img = img.resize((300,300))
+    new_img = ImageTk.PhotoImage(resized_img)
+    img_label = Label(main_frame, image = new_img, bg="white")
+    img_label.image = new_img
+    img_label.place(x=460,y=50)
+    
+    scores_frame.pack(anchor='w', padx=10, pady=15)
+
+
 def delete_pages():
     for frame in main_frame.winfo_children(): #loop through the frames inside main_frame
         frame.destroy() #removes the frame from the window
@@ -157,6 +227,7 @@ def delete_pages():
 # ===== FRAMES =====
 frame = Frame(root, bg= "#162236", width=995, height=60)
 frame.pack()
+Label(root, text= "STUDENT MANAGEMENT", font=("Roboto",15, "bold"), bg= "#162236", fg="white").place(x=15, y=18)
 options_frame = Frame(root, bg= '#202f46', width=200, height=640) #side dashboard frame for the buttons
 options_frame.pack(side=LEFT)
 
@@ -169,7 +240,7 @@ main_frame.pack_propagate(False) #prevent the frame from automatically resizing
 home_btn = Button(options_frame, text="HOME", font=("Tahoma",11, "bold"), fg="white", bg='#202f46', bd=0, command=home_page) #bd removes the border around the button
 home_btn.place(x=20, y=50)
 
-score_btn = Button(options_frame, text="SCORE", font=("Tahoma", 11, "bold"),fg="white", bg='#202f46', bd=0)
+score_btn = Button(options_frame, text="SCORE", font=("Tahoma", 11, "bold"),fg="white", bg='#202f46', bd=0, command=scores_page)
 score_btn.place(x=20, y=110)
 
 sort_btn = Button(options_frame, text="SORT RECORDS", font=("Tahoma", 11, "bold"),fg="white", bg='#202f46', bd=0)
