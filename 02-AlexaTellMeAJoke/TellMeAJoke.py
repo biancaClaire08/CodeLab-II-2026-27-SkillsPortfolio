@@ -1,6 +1,7 @@
 #import tkinter
 from tkinter import *
 import random #import random module
+from PIL import ImageTk, Image
 
 root = Tk()
 root.geometry("550x450")
@@ -47,21 +48,29 @@ def show_punchline():
 def next_joke():
     tell_joke() #calls the tell_joke function
 
+
+#image set as a background
+img = Image.open("02-AlexaTellMeAJoke/bg.png")
+resized_img = img.resize((550,450))
+bg_img = ImageTk.PhotoImage(resized_img)
+bg_label = Label(root, image=bg_img)
+bg_label.place(x=0, y=0)
+
 #title displayed using label
-title = Label(root,text="ALEXA'S JOKES", font=("Courier",24,"bold"), bg="#c0c0c0", fg="black")
+title = Label(root,text="ALEXA'S JOKES", font=("Courier",24,"bold"), bg="#ece4d9", fg="black")
 title.pack(pady=(60,0))
 
 #frame
-frame = Frame(root, bg="#526B5D", width=700, height=150)
+frame = Frame(root, bg="#424242", width=700, height=150)
 frame.pack(pady=30)
 
 
 #label to display the joke setup
-setup_label = Label(root, text = (""), font=("Roboto", 13, "bold"), bg="#526B5D", fg="black")
+setup_label = Label(root, text = (""), font=("Roboto", 13, "bold"), bg="#424242", fg="white")
 setup_label.place(relx=0.5, y=190, anchor="center") #relx positions the label at 50% point of the entire window's width
 
 #label to display the joke punchline
-punchline_label = Label(root, text = (""), font=("Roboto", 11), bg="#526B5D", fg="black")
+punchline_label = Label(root, text = (""), font=("Roboto", 11), bg="#424242", fg="white")
 punchline_label.place(relx=0.5, y=225, anchor="center")
 
 
