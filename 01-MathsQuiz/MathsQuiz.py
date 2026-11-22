@@ -51,7 +51,7 @@ def selectedDifficulty(difficulty_selected):
 
     score_label.config(text=f"SCORE: {score}/100")
     label2.config(text="")
-    question = False
+    question = False #flag variable
 
     displayProblem() #calls the displayProblem function
 
@@ -62,9 +62,9 @@ def displayProblem(): #function triggers when user clicks on the button difficul
 
     if question == False:
         #condition to check whether 10 questions have been displayed
-        if question_counter >=10:
-            displayResults()
-            return
+        if question_counter >=10: 
+            displayResults() #if ten questions have already been displayed, the results will be shown
+            return #will not return any value but will exit the function
 
         number_of_attempts = 1 #resets the attempt after every new question
         question_counter+=1 #increments after one question is done
@@ -78,6 +78,7 @@ def displayProblem(): #function triggers when user clicks on the button difficul
         else:
             correct_answer = num1-num2
 
+        #displays a label of what question the user is in
         questionHeading_label.config(text=f"Question {question_counter}")
 
         question_label.config(text= f"{num1} {operation_choice} {num2} =") #take the numbers and operations from the random module
@@ -89,7 +90,7 @@ def displayProblem(): #function triggers when user clicks on the button difficul
     #try except handle to ensure the number entered is an integer
     try:
         user_answer = int(answer_entry.get()) #gets the users answer
-    except ValueError: #if the answer is not an integer or left empty, the label text will be displayed
+    except ValueError: #if the answer is not an integer or left empty, the label text above the entry will be displayed
         label2.config(text="Please enter a valid answer")
         return #stop the function if user does not enter a valid integer
 
@@ -101,12 +102,12 @@ def displayProblem(): #function triggers when user clicks on the button difficul
             score+=5 #five points added for being correct on the second attempt 
             label2.config(text = "Correct. +5 points added")
 
-        score_label.config(text=f"SCORE: {score}/100")
+        score_label.config(text=f"SCORE: {score}/100") #the score displayed to the user throughout the quiz
         question=False #set to False when the question has been completed (will help move on to the next question)
     else:
         if number_of_attempts == 1: #another attempt to the user if the first answer is incorrect
             number_of_attempts = 2 #second attempt
-            label2.config(text="Wrong answer. Try again")
+            label2.config(text="Wrong answer. Try again") #tells the user that the answer they have entered is wrong
             answer_entry.delete(0, END) #clears the answer written, sets the entry widget to blank
         else:
             label2.config(text="Wrong. No tries remaining") #moves to the next question with the help of the False boolean if the second attempt is also incorrect
@@ -116,8 +117,9 @@ def displayProblem(): #function triggers when user clicks on the button difficul
         displayProblem()
 
 
+#function used to categorise the scores into grades
 def displayResults():
-    switch_frame(frame2)
+    switch_frame(frame2) #switches to frame2
     if score >= 90:
         grade = "A+"
     elif score >= 80:
@@ -131,19 +133,22 @@ def displayResults():
     else:
         grade ="F"
 
+    #displays the score and grade
     results_label.config(text=f"{score}")
     grade_label.config(text=f"You have achieved an {grade} grade")
 
 def playAgain(): #function to ask whether the user wants to play again using message box
     answer = messagebox.askyesno("Confirm", "Do you want to play again?")
 
+    #if the user clicks the yes button, the main menu is displayed again
     if answer:
         displayMenu()
+
 
 # ===== HEADING SECTION USING AN IMAGE AND LABEL // FRAME 1 =====
 def displayMenu(): #function to display difficulty level menu
     global main_frame
-    main_frame = Frame(root, bg="#1b2645")
+    main_frame = Frame(root, bg="#1b2645") #background of the main_frame
 
     img = Image.open('01-MathsQuiz/title.png') #opens the image file
     resized_img = img.resize((420,120)) #reizes the image to 360 x 100
@@ -178,7 +183,7 @@ displayMenu() #calls the function to display the content under displayMenu
 
 # ===== FRAME ONE FOR THE MAIN QUIZ SECTION =====
 frame1 = Frame(root,bg="#1b2645")
-frame1.place(x=0, y=0, width=400, height=400)
+frame1.place(x=0, y=0, width=400, height=400) #.place will position the frame at the specific coordinates
 
 #label text is empty for config
 label1 = Label(frame1, text = "", font=("Georgia", 21, "bold"), fg="#fde68a", bg="#1b2645")
