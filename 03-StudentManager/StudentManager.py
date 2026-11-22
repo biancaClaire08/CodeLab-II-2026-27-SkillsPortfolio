@@ -270,6 +270,75 @@ def delete_confirmation(studentID_entry, frame2):
 
         messagebox.showinfo("", "Student record has been successfuly deleted")
 
+def search():
+    frame2 = Toplevel(root)
+    frame2.title("Search Student")
+    frame2.geometry("250x100")
+    frame2.resizable(0,0)
+
+    Label(frame2, text="Enter Student ID:").place(x=10, y=20)
+    studentID_entry1 = Entry(frame2)
+    studentID_entry1.place(x=110, y=20)
+    Button(frame2, text="Find Student", bg="#17243a", fg="white", font=("bold",8), command=lambda: enter_updated_records(studentID_entry1, frame2)).place(x=165, y=50)
+
+def update(student,student_id,name,marks1,marks2,marks3,exam_marks,update_frame,frame2):
+    with open('./03-StudentManager/student.txt','r') as file:
+        file_content = file.read()
+        new_marks1 = int(marks1.get())
+        new_marks2 = int(marks2.get())
+        new_marks3 = int(marks3.get())
+        new_examMarks = int(exam_marks.get())
+        new_name = name.get()
+
+        old_record = f"{student["student_id"]},{student["student_name"]},{student["course_marks"][0]},{student["course_marks"][1]},{student["course_marks"][2]},{student["examination_mark"]}"
+        new_record = f"{student["student_id"]},{new_name},{new_marks1},{new_marks2},{new_marks3},{new_examMarks}"
+
+        #modifying the old data with new data using .replace
+        modified_content = file_content.replace(old_record, new_record)
+
+        with open('./03-StudentManager/student.txt','w') as file:
+            file.write(modified_content)
+
+        messagebox.showinfo("", "Student record has been successfully updated")
+
+
+def enter_updated_records(studentID_entry1, frame2):
+    students = read()
+    student_found = False
+    student_id = studentID_entry1.get()
+
+    for student in students:
+        if student["student_id"].strip() == student_id:
+            student_found = True
+            update_frame = Toplevel(frame2)
+            update_frame.title("Update Student Record")
+            update_frame.geometry("350x300")
+
+            #displays the student id and name of the student id entered by the user
+            Label(update_frame, text= student["student_id"] + ", " + "Student Name:" + " " + student["student_name"], font=(10)).pack(pady=14)
+            #label headings with an entry widgets to let the user update the student records
+            Label(update_frame, text="Student Name:").place(x=15, y=60)
+            name = Entry(update_frame, width = 30)
+            name.place(x=145, y=60)
+            Label(update_frame, text="Coursework 1 Marks:").place(x=15, y=90)
+            marks1 = Entry(update_frame, width = 30)
+            marks1.place(x=145, y=90)
+            Label(update_frame, text="Coursework 2 Marks:").place(x=15, y=120)
+            marks2 = Entry(update_frame, width = 30)
+            marks2.place(x=145, y=120)
+            Label(update_frame, text="Coursework 3 Marks:").place(x=15, y=150)
+            marks3 = Entry(update_frame, width = 30)
+            marks3.place(x=145, y=150)
+            Label(update_frame, text="Examination Marks:").place(x=15, y=180)
+            exam_marks = Entry(update_frame, width = 30)
+            exam_marks.place(x=145, y=180)
+
+            Button(update_frame, text="Save Changes", bg="#17243a", fg="white", font=("bold",10), command=lambda: update(student,student_id,name, marks1, marks2, marks3, exam_marks,update_frame, frame2)).place(relx=0.35, rely=0.72)
+            break
+    if student_found == False:
+        messagebox.showinfo("Error", "No student found with that ID")
+
+
 # ===== FUNCTIONS FOR FRAMES =====
 def home_page():
     delete_pages()
@@ -321,6 +390,8 @@ def modify():
     add_btn.pack(anchor='w', padx=10, pady=(30,10))
     del_btn = Button(modify_frame, text="Delete Student Record", font=("Times", 18), bg="black", fg="#FFFFFF", padx=27, pady=5, width=80, command=delete)
     del_btn.pack(anchor='w', padx=10, pady=(0,10))
+    update_btn = Button(modify_frame, text="Update Student Record", font=("Times", 18), bg="black", fg="#FFFFFF", padx=27, pady=5, width=80, command=search)
+    update_btn.pack(anchor='w', padx=10, pady=(0,10))
     
     modify_frame.pack(anchor='w', padx=10, pady=15)
 
