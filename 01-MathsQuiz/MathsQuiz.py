@@ -1,4 +1,5 @@
-#import the modules needed
+# ===== IMPORTING MODULES =====
+#import tkinter and PIL images
 from tkinter import *
 from PIL import ImageTk, Image
 
@@ -11,9 +12,10 @@ import random #import random module
 root = Tk()
 #create an instance of tkinter window
 root.geometry("400x400")
+root.resizable(0,0) #prevents the window from being resized
 root.title("Arithmetic Quiz")
 root.config(bg="#1b2645") #sets the background color of the window
-root.iconbitmap('./01-MathsQuiz/icon1.ico')
+root.iconbitmap('./01-MathsQuiz/icon1.ico') #icon for the window
 
 # ===== FUNCTIONS =====
 def randomInt(difficulty): #function for the number randomiser to give random questions to the user
@@ -26,25 +28,27 @@ def randomInt(difficulty): #function for the number randomiser to give random qu
     elif difficulty == "Advanced":
         num1 = random.randint(1000,9999) #generate any number, 1000 to 9999
         num2 = random.randint(1000,9999) 
-    return num1, num2
+    return num1, num2 
 
 def decideOperation(): #random operation sign
     operation = ["+", "-"] #the options for operators
     choice = random.choice(operation) #randomly selects from the operation choices
-    return choice
+    return choice 
 
 def selectedDifficulty(difficulty_selected):
-    global difficulty, score, question_counter, number_of_attempts, question
+    #global will allow these variables to be accessed throughout the program
+    global difficulty, score, question_counter, number_of_attempts, question 
     difficulty=difficulty_selected
-    #label that outputs the difficulty (easy, moderate, advanced) along with mode, all in uppercase
+
+    #title label that outputs the difficulty (easy, moderate, advanced) along with mode, all in uppercase
     label1.config(text=difficulty.upper() + " MODE")
-    messagebox.showinfo("Difficulty Selected", f"You selected {difficulty_selected} Mode.")
+    messagebox.showinfo("Difficulty Selected", f"You selected {difficulty_selected} Mode.") #displays a message box to the user on the difficulty they selected
 
     #initialising the score, question counter and attempt for each question
     score=0
     question_counter = 0
     number_of_attempts=1
-    #resets the score and label for the next quiz (if the user plays again)
+
     score_label.config(text=f"SCORE: {score}/100")
     label2.config(text="")
     question = False
@@ -53,7 +57,6 @@ def selectedDifficulty(difficulty_selected):
 
 
 def displayProblem(): #function triggers when user clicks on the button difficulty
-    #allow the function to access these variables
     global score, question_counter, number_of_attempts, correct_answer, question
     switch_frame(frame1) #switches to frame 1 (where the quiz takes place)
 
