@@ -36,9 +36,16 @@ def calculate_results(student):
 
     return total_coursework, exam_mark, percentage, grade
 
-def view_records(): #function to display student records
+#function to display student records
+def view_records(students=None): #this function will function two ways: if no parameter is passed on or if students parameter is passed on it
     record_frame = Frame(main_frame) #create a frame inside the root window
     record_frame.place(relx=0.5,rely=0.65,anchor="center")
+
+    #if no students is passed into the function
+    if students is None:
+        student_list = data["Student Details"]
+    else:
+        student_list = students
     
     #headings for the table
     Label(record_frame, text="Student No.", width=10).grid(row=25, column=1)
@@ -51,7 +58,7 @@ def view_records(): #function to display student records
     total_percentage = 0
     row = 26
 
-    for student in data["Student Details"]:
+    for student in student_list:
         student_no = student["student_id"]
         student_name = student["student_name"]
         
@@ -338,6 +345,23 @@ def enter_updated_records(studentID_entry1, frame2):
     if student_found == False:
         messagebox.showinfo("Error", "No student found with that ID")
 
+def sort_records(reverse):
+    students = []
+    for student in data["Student Details"]:
+        students.append(student)
+
+    #bubble sort
+    for x in range(len(students)):
+        for y in range(x+1, len(students)):
+            if reverse == False:
+                if students[x]["student_name"] > students[y]["student_name"]:
+                    students[x],students[y] = students[y], students[x] #swap the places
+            else:
+                if students[x]["student_name"] < students[y]["student_name"]:
+                    students[x],students[y] = students[y], students[x]
+    view_records(students)
+    
+
 
 # ===== FUNCTIONS FOR FRAMES =====
 def home_page():
@@ -380,6 +404,19 @@ def scores_page():
     
     scores_frame.pack(anchor='w', padx=10, pady=15)
 
+def sort_page():
+    delete_pages()
+    sort_frame = Frame(main_frame, bg="white")
+    heading3 = Label(sort_frame, text="Sorting Student Records", font=("Courier",26, "bold"), bg="#FFFFFF", fg="black")
+    heading3.pack(anchor='w', padx=10)
+
+    asc_button = Button(sort_frame, text="Ascending", font=("Times", 14), bg="black", fg="#FFFFFF", padx=27, pady=5, width=80, command=lambda: sort_records(False))
+    asc_button.pack(anchor='w', padx=10, pady=(30,10))
+    desc_button = Button(sort_frame, text="Descending", font=("Times", 14), bg="black", fg="#FFFFFF", padx=27, pady=5, width=80, command=lambda: sort_records(True))
+    desc_button.pack(anchor='w', padx=10)
+    
+    sort_frame.pack(anchor='w', padx=10, pady=15)
+
 def modify():
     delete_pages()
     modify_frame = Frame(main_frame, bg="white")
@@ -421,7 +458,7 @@ home_btn.place(x=20, y=50)
 score_btn = Button(options_frame, text="SCORE", font=("Tahoma", 11, "bold"),fg="white", bg='#202f46', bd=0, command=scores_page)
 score_btn.place(x=20, y=110)
 
-sort_btn = Button(options_frame, text="SORT RECORDS", font=("Tahoma", 11, "bold"),fg="white", bg='#202f46', bd=0)
+sort_btn = Button(options_frame, text="SORT RECORDS", font=("Tahoma", 11, "bold"),fg="white", bg='#202f46', bd=0, command=sort_page)
 sort_btn.place(x=20, y=170)
 
 modify_btn = Button(options_frame, text="MODIFY", font=("Tahoma", 11, "bold"),fg="white", bg='#202f46', bd=0, command=modify)
