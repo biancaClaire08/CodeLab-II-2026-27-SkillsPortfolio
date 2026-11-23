@@ -2,11 +2,11 @@
 #import tkinter and PIL images
 from tkinter import *
 from PIL import ImageTk, Image
+from tkinter import ttk #import themed tkinter widgets
 
 #import messagebox
 import tkinter.messagebox
 from tkinter import messagebox
-
 import random #import random module
 
 root = Tk()
@@ -80,6 +80,7 @@ def displayProblem(): #function triggers when user clicks on the button difficul
 
         #displays a label of what question the user is in
         questionHeading_label.config(text=f"Question {question_counter}")
+        progress_bar["value"] = question_counter #progress bar will increase based on the question counter number
 
         question_label.config(text= f"{num1} {operation_choice} {num2} =") #take the numbers and operations from the random module
 
@@ -179,6 +180,12 @@ def displayMenu(): #function to display difficulty level menu
 
     main_frame.place(x=0, y=0, width=400, height=400) #aligns the content on the screen
 
+#function for the back button, makes use of a messagebox to verify if the user wants to return to the main menu mid way through the quiz
+def quit():
+    chosen = messagebox.askyesno("Quit Game", "Are you sure you want to go back to the main menu?")
+    if chosen==True:
+        displayMenu()
+
 displayMenu() #calls the function to display the content under displayMenu
 
 # ===== FRAME ONE FOR THE MAIN QUIZ SECTION =====
@@ -191,14 +198,18 @@ label1.pack(pady=(15,0))
 line1 = Label(frame1, text = "_______________________________________________________", bg="#1b2645", fg="white")
 line1.pack()
 
-
 #using labels for the heading question and score
 questionHeading_label = Label(frame1, text = "", font= ("Helvetica",10, "bold"), bg="#1b2645", fg="white")
 score_label = Label(frame1, text = "", font= ("Helvetica",10, "bold"), bg="#1b2645", fg="white")
 
-#absolute positioning using place
-questionHeading_label.place(x=58, y=75)
-score_label.place(x=240, y=75)
+#progressbar imported from ttk
+#horizontal progress bar which visually tracks the number of questions answered by the user
+progress_bar = ttk.Progressbar(frame1, orient="horizontal", length=275, mode="determinate", maximum=11) #determinate sets a fixed progress 
+progress_bar.pack(pady=5)
+
+#absolute positioning using .place coordinates
+questionHeading_label.place(x=58, y=105)
+score_label.place(x=240, y=105)
 
 #entry to allow the user to enter the answer for the given question
 answer_entry = Entry(frame1, font= ("Roboto",16), bg="#1b2645", fg="white", width = 22, justify= "center") #when the user enters the answer into the entry widget, it will start at the center of the widget
@@ -215,6 +226,10 @@ question_label.place(y=180, x=200, anchor= "center")
 #message label to tell the user what to do
 label2 = Label(frame1, text="", font= ("Roboto",9), bg="#1b2645", fg="white")
 label2.place(y=210, x=126)
+
+#back button for the user to click to quit the quiz midway
+back_button = Button(frame1, text="Back to Menu", bg="#080E1F", fg="white", font=("Roboto", 10), command=quit)
+back_button.place(x=10, y=360)
 
 # ===== FRAME TWO FOR THE RESULTS SECTION =====
 frame2 = Frame(root,bg="#1b2645")
