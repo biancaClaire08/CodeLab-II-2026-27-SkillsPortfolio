@@ -1,13 +1,16 @@
 #import tkinter
 from tkinter import *
 import random #import random module
-from PIL import ImageTk, Image
+from PIL import ImageTk, Image #import PIL for images
+#import messagebox
+import tkinter.messagebox
+from tkinter import messagebox
 
 root = Tk()
 root.geometry("550x450")
 root.title("Alexa Tell me a Joke")
 root.config(bg="#c0c0c0")
-root.iconbitmap('./02-AlexaTellMeAJoke/icon2.ico')
+root.iconbitmap('./02-AlexaTellMeAJoke/icon2.ico') #icon for window
 
 #empty lists
 setup = []
@@ -38,15 +41,21 @@ def tell_joke():
 
 #function to close the window
 def quit():
-    root.destroy()
+    choice = messagebox.askyesno("Quit", "Are you sure you want to close the window?")
+    if choice==True: #if user clicks yes, the window closes
+        root.destroy()
 
 #displays the punchline for the joke
 def show_punchline():
     global index
-    punchline_label.config(text=punchline[index])
+    punchline_label.config(text=punchline[index]) #punchline displays based on the current index number
 
 def next_joke():
     tell_joke() #calls the tell_joke function
+
+def alexa_tellAJoke():
+    tell_joke() #calls the joke function
+    button1.destroy() #deletes the button, user will only be able to click this button once
 
 
 #image set as a background
@@ -60,10 +69,8 @@ bg_label.place(x=0, y=0)
 title = Label(root,text="ALEXA'S JOKES", font=("Courier",24,"bold"), bg="#ece4d9", fg="black")
 title.pack(pady=(60,0))
 
-#frame
 frame = Frame(root, bg="#424242", width=700, height=150)
 frame.pack(pady=30)
-
 
 #label to display the joke setup
 setup_label = Label(root, text = (""), font=("Roboto", 13, "bold"), bg="#424242", fg="white")
@@ -75,17 +82,17 @@ punchline_label.place(relx=0.5, y=225, anchor="center")
 
 
 # ===== BUTTONS =====
-#button to tell a random joke 
-button1 = Button(root, text="Alexa tell me a Joke", font=("Arial", 12), bg="#545454", fg="white", padx=5, pady=8, cursor = "hand2", command=tell_joke) #padding inside the button
-button1.pack(side="left", padx=(65,10)) #placed on the left side
+#button to tell a random joke at the start 
+button1 = Button(root, text="Alexa tell me a Joke", font=("Arial", 12), bg="#545454", fg="white", padx=5, pady=8, cursor = "hand2", command=alexa_tellAJoke) #padding inside the button
+button1.pack(side="top",fill=X, padx=20) 
 
 #button to show the punchline
-button2 = Button(root, text="Show Punchline", font=("Arial", 12), bg="#545454", fg="white", padx=5, pady=8, cursor = "hand2", command=show_punchline) #cursor hand 2 will switch the cursor to the pointing one
-button2.pack(side="left", padx=10) 
+button2 = Button(root, text="Show Punchline", font=("Arial", 12), bg="#545454", fg="white", padx=5, pady=8, width=25, cursor = "hand2", command=show_punchline) #cursor hand 2 will switch the cursor to the pointing one
+button2.pack(side="left", padx=(20,15)) 
 
 #button to display the next joke
-button3 = Button(root, text="Next Joke", font=("Arial", 12), bg="#545454", fg="white", padx=5, pady=8, cursor = "hand2", command=next_joke) 
-button3.pack(side="left", padx=10)
+button3 = Button(root, text="Next Joke", font=("Arial", 12), bg="#545454", fg="white", padx=5, pady=8, width=25, cursor = "hand2", command=next_joke) 
+button3.pack(side="left", padx=(15,20))
 
 #button to close the application
 close_button = Button(root, text="X", font=("Arial", 12), bg="#545454", fg="white", padx=3, pady=1, cursor = "hand2", command=quit) 
