@@ -387,20 +387,20 @@ def home_page():
 def scores_page():
     delete_pages()
     scores_frame = Frame(main_frame, bg="white")
-    heading1 = Label(scores_frame, text="Student Scores", font=("Courier",26, "bold"), bg="#FFFFFF", fg="black")
+    heading1 = Label(scores_frame, text="Student Scores", font=("Arial",26, "bold"), bg="#FFFFFF", fg="black")
     heading1.pack(anchor='w', padx=10)
 
-    button1 = Button(scores_frame, text="Highest Scoring Student", font=("Times", 12), bg="black", fg="#FFFFFF", padx=27, pady=5, width=30, command=lambda: highest_score(scores_frame))
+    button1 = Button(scores_frame, text="Highest Scoring Student", font=("Times", 14), bg="black", fg="#FFFFFF", padx=27, pady=5, width=30, command=lambda: highest_score(scores_frame))
     button1.pack(anchor='w', padx=10, pady=(30,10))
-    button2 = Button(scores_frame, text="Lowest Scoring Student", font=("Times", 12), bg="black", fg="#FFFFFF", padx=27, pady=5, width=30, command=lambda: lowest_score(scores_frame))
+    button2 = Button(scores_frame, text="Lowest Scoring Student", font=("Times", 14), bg="black", fg="#FFFFFF", padx=27, pady=5, width=30, command=lambda: lowest_score(scores_frame))
     button2.pack(anchor='w', padx=10)
 
-    img = Image.open('03-StudentManager/img1.jpg')
-    resized_img = img.resize((300,300))
+    img = Image.open('03-StudentManager/img1.png')
+    resized_img = img.resize((300,280))
     new_img = ImageTk.PhotoImage(resized_img)
     img_label = Label(main_frame, image = new_img, bg="white")
     img_label.image = new_img
-    img_label.place(x=460,y=50)
+    img_label.place(x=460,y=80)
     
     scores_frame.pack(anchor='w', padx=10, pady=15)
 
@@ -437,24 +437,31 @@ main_frame.pack_propagate(False) #prevent the frame from automatically resizing
 
 # ===== BUTTONS =====
 home_btn = Button(options_frame, text="HOME", font=("Tahoma",14, "bold"), fg="white", bg='#202f46', bd=0, command=home_page) #bd removes the border around the button
-home_btn.place(x=20, y=50)
+home_btn.place(x=20, y=30)
 
 score_btn = Button(options_frame, text="SCORE", font=("Tahoma", 14, "bold"),fg="white", bg='#202f46', bd=0, command=scores_page)
-score_btn.place(x=20, y=110)
+score_btn.place(x=20, y=90)
 
 sort_btn = Button(options_frame, text="SORT", font=("Tahoma", 14, "bold"),fg="white", bg='#202f46', bd=0, command=sort_page)
-sort_btn.place(x=20, y=170)
+sort_btn.place(x=20, y=150)
 
-Label(options_frame, text="QUICK ACTIONS", font=("Tahoma", 13, "bold", "underline"),fg="white", bg='#202f46').place(x=20, y=250)
+Label(options_frame, text="QUICK ACTIONS", font=("Tahoma", 13, "bold", "underline"),fg="white", bg='#202f46').place(x=20, y=215)
 
 addRecord_btn = Button(options_frame, text="ADD RECORD", font=("Tahoma", 13, "bold"),fg="white", bg='#202f46', bd=0, command=add_student)
-addRecord_btn.place(x=20, y=300)
+addRecord_btn.place(x=20, y=270)
 
 delRecord_btn = Button(options_frame, text="DEL RECORD", font=("Tahoma", 13, "bold"),fg="white", bg='#202f46', bd=0, command=delete)
-delRecord_btn.place(x=20, y=360)
+delRecord_btn.place(x=20, y=330)
 
 updateRecord_btn = Button(options_frame, text="UPDATE RECORD", font=("Tahoma", 13, "bold"),fg="white", bg='#202f46', bd=0, command=search)
-updateRecord_btn.place(x=20, y=420)
+updateRecord_btn.place(x=20, y=390)
+
+img1 = Image.open('03-StudentManager/img2.png')
+resized_img1 = img1.resize((180,150))
+new_img1 = ImageTk.PhotoImage(resized_img1)
+img_label1 = Label(options_frame, image = new_img1, bg="white")
+img_label1.image = new_img1
+img_label1.place(x=7.5,y=450)
 
 
 home_page()
