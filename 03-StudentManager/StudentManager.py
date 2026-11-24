@@ -417,22 +417,6 @@ def sort_page():
     
     sort_frame.pack(anchor='w', padx=10, pady=15)
 
-def modify():
-    delete_pages()
-    modify_frame = Frame(main_frame, bg="white")
-    heading2 = Label(modify_frame, text="Sorting Records", font=("Courier",26, "bold"), bg="#FFFFFF", fg="black")
-    heading2.pack(anchor='w', padx=10)
-
-    add_btn = Button(modify_frame, text="Add Student Record", font=("Times", 18), bg="black", fg="#FFFFFF", padx=27, pady=5, width=80, command=add_student)
-    add_btn.pack(anchor='w', padx=10, pady=(30,10))
-    del_btn = Button(modify_frame, text="Delete Student Record", font=("Times", 18), bg="black", fg="#FFFFFF", padx=27, pady=5, width=80, command=delete)
-    del_btn.pack(anchor='w', padx=10, pady=(0,10))
-    update_btn = Button(modify_frame, text="Update Student Record", font=("Times", 18), bg="black", fg="#FFFFFF", padx=27, pady=5, width=80, command=search)
-    update_btn.pack(anchor='w', padx=10, pady=(0,10))
-    
-    modify_frame.pack(anchor='w', padx=10, pady=15)
-
-
 def delete_pages():
     for frame in main_frame.winfo_children(): #loop through the frames inside main_frame
         frame.destroy() #removes the frame from the window
@@ -452,17 +436,26 @@ main_frame.pack_propagate(False) #prevent the frame from automatically resizing
 
 
 # ===== BUTTONS =====
-home_btn = Button(options_frame, text="HOME", font=("Tahoma",11, "bold"), fg="white", bg='#202f46', bd=0, command=home_page) #bd removes the border around the button
+home_btn = Button(options_frame, text="HOME", font=("Tahoma",14, "bold"), fg="white", bg='#202f46', bd=0, command=home_page) #bd removes the border around the button
 home_btn.place(x=20, y=50)
 
-score_btn = Button(options_frame, text="SCORE", font=("Tahoma", 11, "bold"),fg="white", bg='#202f46', bd=0, command=scores_page)
+score_btn = Button(options_frame, text="SCORE", font=("Tahoma", 14, "bold"),fg="white", bg='#202f46', bd=0, command=scores_page)
 score_btn.place(x=20, y=110)
 
-sort_btn = Button(options_frame, text="SORT RECORDS", font=("Tahoma", 11, "bold"),fg="white", bg='#202f46', bd=0, command=sort_page)
+sort_btn = Button(options_frame, text="SORT", font=("Tahoma", 14, "bold"),fg="white", bg='#202f46', bd=0, command=sort_page)
 sort_btn.place(x=20, y=170)
 
-modify_btn = Button(options_frame, text="MODIFY", font=("Tahoma", 11, "bold"),fg="white", bg='#202f46', bd=0, command=modify)
-modify_btn.place(x=20, y=230)
+Label(options_frame, text="QUICK ACTIONS", font=("Tahoma", 13, "bold", "underline"),fg="white", bg='#202f46').place(x=20, y=250)
+
+addRecord_btn = Button(options_frame, text="ADD RECORD", font=("Tahoma", 13, "bold"),fg="white", bg='#202f46', bd=0, command=add_student)
+addRecord_btn.place(x=20, y=300)
+
+delRecord_btn = Button(options_frame, text="DEL RECORD", font=("Tahoma", 13, "bold"),fg="white", bg='#202f46', bd=0, command=delete)
+delRecord_btn.place(x=20, y=360)
+
+updateRecord_btn = Button(options_frame, text="UPDATE RECORD", font=("Tahoma", 13, "bold"),fg="white", bg='#202f46', bd=0, command=search)
+updateRecord_btn.place(x=20, y=420)
+
 
 home_page()
 root.mainloop()
