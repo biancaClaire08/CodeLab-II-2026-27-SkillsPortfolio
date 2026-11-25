@@ -235,20 +235,25 @@ back_button.place(x=10, y=360)
 frame2 = Frame(root,bg="#1b2645")
 frame2.place(x=0, y=0, width=400, height=400)
 
+bg_img = Image.open('01-MathsQuiz/Background.jpg')
+resized_bg = bg_img.resize((600,650))
+bg_img1 = ImageTk.PhotoImage(resized_bg)
+Label(frame2,image = bg_img1).place(relx=0.5,rely=0.8,anchor="center")
+
 img1 = Image.open('01-MathsQuiz/title1.png')
 resized_img1 = img1.resize((420,120))
 new_img1 = ImageTk.PhotoImage(resized_img1)
 Label (frame2, image = new_img1, bg="#1b2645").pack(pady=(20,0))
 
 #score heading
-score_heading = Label(frame2, text = "YOUR SCORE", font=("Georgia", 16, "bold"), bg="#1b2645", fg="#fde68a")
+score_heading = Label(frame2, text = "YOUR SCORE", font=("Georgia", 16, "bold"), bg="#00305E", fg="#fde68a")
 score_heading.pack(pady=2)
 #results label, to display the final score
-results_label = Label(frame2, text= "", font=("Georgia", 16, "bold"), bg="#1b2645",fg="#fde68a")
+results_label = Label(frame2, text= "", font=("Georgia", 16, "bold"), bg="#00305E",fg="#fde68a")
 results_label.pack(pady=4)
-crown_label = Label(frame2, text="🜲", font=("Georgia",22), bg="#1b2645",fg="#fde68a").pack() #crown emoticon (for design purposes)
+crown_label = Label(frame2, text="🜲", font=("Georgia",22), bg="#00305E",fg="#fde68a").pack() #crown emoticon (for design purposes)
 #displays the user's final grade based on the score
-grade_label = Label(frame2, text="", font=("Roboto",10), bg="#1b2645", fg="#fde68a")
+grade_label = Label(frame2, text="", font=("Roboto",10), bg="#00305E", fg="#fde68a")
 grade_label.pack(pady=5)
 
 #play again button to allow user to play the quiz again
