@@ -418,6 +418,23 @@ def sort_records(reverse):
                     students[x],students[y] = students[y], students[x]
     view_records(students)
 
+def sort_records1(reverse):
+    students = []
+    for student in data["Student Details"]:
+        students.append(student)
+
+    #bubble sort
+    for x in range(len(students)):
+        for y in range(x+1, len(students)):
+            if reverse == False:
+                if students[x]["student_id"] > students[y]["student_id"]:
+                    students[x],students[y] = students[y], students[x] #swap the places
+            else:
+                if students[x]["student_id"] < students[y]["student_id"]:
+                    students[x],students[y] = students[y], students[x]
+    view_records(students)
+
+
 def stats(button4, home_frame):
     button4.destroy()
     frame_bg1=Frame(home_frame, bg="#2F3845", width=175, height=130)
@@ -476,13 +493,20 @@ def scores_page():
 def sort_page():
     delete_pages()
     sort_frame = Frame(main_frame, bg="white")
-    heading3 = Label(sort_frame, text="Sorting Student Records", font=("Courier",26, "bold"), bg="#FFFFFF", fg="black")
+    heading3 = Label(sort_frame, text="Sorting Student Records", font=("Arial",26, "bold"), bg="#FFFFFF", fg="black")
     heading3.pack(anchor='w', padx=10)
 
-    asc_button = Button(sort_frame, text="Ascending", font=("Times", 14), bg="black", fg="#FFFFFF", padx=27, pady=5, width=80, command=lambda: sort_records(False))
-    asc_button.pack(anchor='w', padx=10, pady=(30,10))
-    desc_button = Button(sort_frame, text="Descending", font=("Times", 14), bg="black", fg="#FFFFFF", padx=27, pady=5, width=80, command=lambda: sort_records(True))
-    desc_button.pack(anchor='w', padx=10)
+    Label(sort_frame,text="Name", font=("Times",14, "underline"), bg="#FFFFFF", fg="black").place(x=38,y=58)
+    ascend = Radiobutton(sort_frame, text="Ascending", value="ascend", font=("Times", 14), fg="black", bg="white", padx=27, pady=5, command=lambda: sort_records(False))
+    ascend.pack(anchor='w', padx=10, pady=(40,10))
+    descend = Radiobutton(sort_frame, text="Descending", value="descend", font=("Times", 14),fg="black", bg="white", padx=27, pady=5, command=lambda: sort_records(True))
+    descend.pack(anchor='w', padx=10)
+
+    Label(sort_frame,text="ID", font=("Times",14, "underline"), bg="#FFFFFF", fg="black").place(x=300,y=58)
+    ascend1 = Radiobutton(sort_frame, text="Ascending", value="ascend1", font=("Times", 14), fg="black", bg="white", padx=27, pady=5, command=lambda: sort_records1(False))
+    ascend1.place(x=270,y=87)
+    descend1 = Radiobutton(sort_frame, text="Descending", value="descend1", font=("Times", 14),fg="black", bg="white", padx=27, pady=5, command=lambda: sort_records1(True))
+    descend1.place(x=270,y=138)
     
     sort_frame.pack(anchor='w', padx=10, pady=15)
 
