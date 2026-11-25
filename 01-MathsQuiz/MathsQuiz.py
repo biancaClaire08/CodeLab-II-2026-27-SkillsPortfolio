@@ -243,7 +243,7 @@ Label(frame2,image = bg_img1).place(relx=0.5,rely=0.8,anchor="center")
 img1 = Image.open('01-MathsQuiz/title1.png')
 resized_img1 = img1.resize((420,120))
 new_img1 = ImageTk.PhotoImage(resized_img1)
-Label (frame2, image = new_img1, bg="#1b2645").pack(pady=(20,0))
+Label (frame2, image = new_img1, bg="#00305e").pack(pady=(20,0))
 
 #score heading
 score_heading = Label(frame2, text = "YOUR SCORE", font=("Georgia", 16, "bold"), bg="#00305E", fg="#fde68a")
