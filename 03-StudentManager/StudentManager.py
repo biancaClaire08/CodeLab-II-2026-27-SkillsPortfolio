@@ -36,27 +36,32 @@ def calculate_results(student):
 
     return total_coursework, exam_mark, percentage, grade
 
+number_of_students=0
+average=0
+
 #function to display student records
-def view_records(students=None): #this function will function two ways: if no parameter is passed on or if students parameter is passed on it
+def view_records(students=None, display_table=True): #this function will function two ways: if no parameter is passed on or if students parameter is passed on it
     record_frame = Frame(main_frame) #create a frame inside the root window
     record_frame.place(relx=0.5,rely=0.65,anchor="center")
 
+    global number_of_students, average
     #if no students is passed into the function
     if students is None:
         student_list = data["Student Details"]
     else:
         student_list = students
-    
-    #headings for the table
-    Label(record_frame, text="Student No.", width=10).grid(row=25, column=1)
-    Label(record_frame, text="Student Name", width=14).grid(row=25, column=2)
-    Label(record_frame, text="Total Coursework Mark", width=22).grid(row=25, column=3)
-    Label(record_frame, text="Exam Mark", width=9).grid(row=25, column=4)
-    Label(record_frame, text="Overall Percentage", width=15).grid(row=25, column=5)
-    Label(record_frame, text="Grade", width=8).grid(row=25, column=6)
 
-    total_percentage = 0
+    if display_table==True:
+        #headings for the table
+        Label(record_frame, text="Student No.", width=10).grid(row=25, column=1)
+        Label(record_frame, text="Student Name", width=14).grid(row=25, column=2)
+        Label(record_frame, text="Total Coursework Mark", width=22).grid(row=25, column=3)
+        Label(record_frame, text="Exam Mark", width=9).grid(row=25, column=4)
+        Label(record_frame, text="Overall Percentage", width=15).grid(row=25, column=5)
+        Label(record_frame, text="Grade", width=8).grid(row=25, column=6)
+
     row = 26
+    total_percentage=0
 
     for student in student_list:
         student_no = student["student_id"]
@@ -66,23 +71,21 @@ def view_records(students=None): #this function will function two ways: if no pa
         total_percentage = total_percentage + percentage
         percentage1 = str(percentage) + "%"
 
-        #inserting the student data into the table
-        Label(record_frame, text=student_no, width=10).grid(row=row, column=1)
-        Label(record_frame, text=student_name, width=14).grid(row=row, column=2)
-        Label(record_frame, text=total_coursework, width=22).grid(row=row, column=3)
-        Label(record_frame, text=exam_mark, width=25).grid(row=row, column=4)
-        Label(record_frame, text=percentage1, width=15).grid(row=row, column=5)
-        Label(record_frame, text=grade, width=8).grid(row=row, column=6)
-        row+=1 #increments the row counter
+        if display_table==True:
+            #inserting the student data into the table
+            Label(record_frame, text=student_no, width=10).grid(row=row, column=1)
+            Label(record_frame, text=student_name, width=14).grid(row=row, column=2)
+            Label(record_frame, text=total_coursework, width=22).grid(row=row, column=3)
+            Label(record_frame, text=exam_mark, width=25).grid(row=row, column=4)
+            Label(record_frame, text=percentage1, width=15).grid(row=row, column=5)
+            Label(record_frame, text=grade, width=8).grid(row=row, column=6)
+            row+=1 #increments the row counter
 
         #counting the number of students using len 
         number_of_students = len(data["Student Details"])
         #average of percentage
         average = total_percentage / number_of_students 
-
-    #display number of students and average percentage in the bottom of the table
-    Label(record_frame, text="Number of Students: " + str(number_of_students)).grid(row=row, column=1)
-    Label(record_frame, text="Average Percentage: " + str(average)).grid(row=row+1, column=1)
+        
 
 
 def search_student(id_entry):
@@ -119,9 +122,49 @@ def search_student(id_entry):
 
         Label(search_frame, text="Grade", width=22).grid(row=6, column=0)
         Label(search_frame, text=grade).grid(row=6, column=1)
+
+def search_student1(name_entry):
+    student_name_entered = name_entry.get()
+    student_found = False
+    student_details = None #no student details stored
+
+    if student_name_entered.strip() == "":
+        messagebox.showinfo("Error", "Please enter a Name")
+        return
+    
+    for student in data["Student Details"]:
+        if (student_name_entered.strip().lower()) in student["student_name"].lower():
+            student_found = True
+            student_details = student
+            break
+    if student_found == False:
+        messagebox.showinfo("Invalid", "Student not found")
+
+    if student_found == True:
+        total_coursework, exam_mark, percentage, grade = calculate_results(student)        
+
+        #heading in column 1 with the student's information in column 2
+        Label(search_frame, text="Student No.").grid(row=1, column=0, padx=10)
+        Label(search_frame, text=student_details["student_id"]).grid(row=1, column=1)
+        
+        Label(search_frame, text="Student Name", width=22).grid(row=2, column=0)
+        Label(search_frame, text=student_details["student_name"]).grid(row=2, column=1)
+        
+        Label(search_frame, text="Total Coursework Mark", width=22).grid(row=3, column=0)
+        Label(search_frame, text=total_coursework).grid(row=3, column=1)
+
+        Label(search_frame, text="Exam Mark", width=22).grid(row=4, column=0)
+        Label(search_frame, text=exam_mark).grid(row=4, column=1)
+        
+        Label(search_frame, text="Overall Percentage", width=22).grid(row=5, column=0)
+        Label(search_frame, text=str(percentage) + "%").grid(row=5, column=1)
+
+        Label(search_frame, text="Grade", width=22).grid(row=6, column=0)
+        Label(search_frame, text=grade).grid(row=6, column=1)
+
      
 
-def individual_record():
+def individual_record_ID():
     global search_frame 
     #open a new separate window while keeping the main window open
     search_frame = Toplevel(root)
@@ -133,6 +176,20 @@ def individual_record():
     id_entry = Entry(search_frame, width=30)
     id_entry.grid(row=0, column=1, padx=10, pady=10)
     search_btn = Button(search_frame, text="Search Student ID", font=("bold",8), width=16, bg="#162236", fg="white", command=lambda: search_student(id_entry))
+    search_btn.grid(row=0, column=2, padx=15)
+
+def individual_record_Name():
+    global search_frame 
+    #open a new separate window while keeping the main window open
+    search_frame = Toplevel(root)
+    search_frame.title("Searching Record")
+    search_frame.geometry("500x200")
+    search_frame.resizable(0,0)
+    
+    id_label = Label(search_frame, text="Enter Student Name:", anchor='w').grid(row=0, column=0, padx=10, pady=10)
+    name_entry = Entry(search_frame, width=30)
+    name_entry.grid(row=0, column=1, padx=10, pady=10)
+    search_btn = Button(search_frame, text="Search Student Name", font=("bold",8), width=17, bg="#162236", fg="white", command=lambda: search_student1(name_entry))
     search_btn.grid(row=0, column=2, padx=15)
 
 
@@ -360,29 +417,41 @@ def sort_records(reverse):
                 if students[x]["student_name"] < students[y]["student_name"]:
                     students[x],students[y] = students[y], students[x]
     view_records(students)
-    
+
+def stats(button4, home_frame):
+    button4.destroy()
+    frame_bg1=Frame(home_frame, bg="#2F3845", width=175, height=130)
+    frame_bg1.place(x=400,y=70)
+    frame_bg2=Frame(home_frame, bg="#2F3845", width=164, height=130)
+    frame_bg2.place(x=585,y=70)
+
+    view_records(display_table=False)
+    Label(frame_bg1, text="Total Number \n of Students", font=("Arial",16,"bold"), bg="#2F3845", fg="white", justify="left").place(relx=0.06,rely=0.1)
+    Label(frame_bg1, text=number_of_students, font=("Arial",12), bg="#2F3845", fg="white", justify="left").place(relx=0.1,rely=0.6)
+    Label(frame_bg2, text="Average Score", font=("Arial",15,"bold"), bg="#2F3845", fg="white", justify="left").place(relx=0.06,rely=0.1)
+    Label(frame_bg2, text=str(average) + "%", font=("Arial",12), bg="#2F3845", fg="white", justify="left").place(relx=0.1,rely=0.6)
 
 
 # ===== FUNCTIONS FOR FRAMES =====
 def home_page():
     delete_pages()
     home_frame = Frame(main_frame, bg="white")
-    heading = Label(home_frame, text="Home", font=("Courier",26, "bold"), bg="#FFFFFF", fg="black")
+    heading = Label(home_frame, text="Home", font=("Arial",26, "bold"), bg="#FFFFFF", fg="black")
     heading.pack(anchor='w', padx=10) #aligns the text to the left with spacing on the x-axis
     
     button1 = Button(home_frame, text="View all student records", font=("Times", 12), bg="black", fg="#FFFFFF", padx=27, pady=5, width=30, command=view_records)
-    button1.pack(anchor='w', padx=10, pady=(30,10))
-    button2 = Button(home_frame, text="View individual student record", font=("Times", 12), bg="black", fg="#FFFFFF", padx=27, pady=5, width=30, command=individual_record)
-    button2.pack(anchor='w', padx=10)
+    button1.pack(anchor='w', padx=10, pady=(15,12))
+    button2 = Button(home_frame, text="View individual student record by ID", font=("Times", 12), bg="black", fg="#FFFFFF", padx=27, pady=5, width=30, command=individual_record_ID)
+    button2.pack(anchor='w', padx=10, pady=(0,12))
+    button3 = Button(home_frame, text="View individual student record by Name", font=("Times", 12), bg="black", fg="#FFFFFF", padx=27, pady=5, width=30, command=individual_record_Name)
+    button3.pack(anchor='w', padx=10)
+    
+    frame_bg=Frame(home_frame, bg="#222A37", width=370, height=150)
+    frame_bg.place(x=390,y=60)
+    button4 = Button(home_frame, text="Extra Information", font=("Times", 12), bg="black", fg="#FFFFFF", padx=27, pady=5, width=20, command=lambda: stats(button4, home_frame))
+    button4.place(x=455, y=115)
 
-    img = Image.open('03-StudentManager/student.jpg')
-    resized_img = img.resize((170,170))
-    new_img = ImageTk.PhotoImage(resized_img)
-    img_label = Label(main_frame, image = new_img, bg="white")
-    img_label.image = new_img
-    img_label.place(x=550,y=20)
-
-    home_frame.pack(anchor='w', padx=10, pady=15)
+    home_frame.pack(anchor='w', padx=10, pady=15, fill="both", expand="Yes")
 
 def scores_page():
     delete_pages()
