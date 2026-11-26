@@ -1,3 +1,4 @@
+# ===== IMPORTING MODULES =====
 #import tkinter
 from tkinter import *
 import random #import random module
@@ -28,6 +29,15 @@ def jokes():
 
 jokes() #calls the function to read the text file
 
+#typing effect for setup_label
+def typingEffect(text, index=0):
+    if index<len(text): #checks if there is any characters left to be displayed
+        current_text = text[:index+3] #displays up to 3 characters
+        setup_label.config(text=current_text) #configurate the label
+        
+        #wait 80ms before displaying the next 3 characters
+        root.after(80, typingEffect, text, index+3)
+
 index = 0
 #function to tell the joke, display the setup
 def tell_joke():
@@ -36,7 +46,8 @@ def tell_joke():
     index = random.randint(0, len(setup) -1) #List indexing, -1 is included since Python starts from 0
 
     #display the setup of the joke
-    setup_label.config(text=setup[index])
+    setup_label.config(text="")
+    typingEffect(setup[index]) 
     punchline_label.config(text="") #clears the previous punchline displayed
 
 #function to close the window
