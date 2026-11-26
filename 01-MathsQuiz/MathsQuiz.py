@@ -28,7 +28,7 @@ def randomInt(difficulty): #function for the number randomiser to give random qu
     elif difficulty == "Advanced":
         num1 = random.randint(1000,9999) #generate any number, 1000 to 9999
         num2 = random.randint(1000,9999) 
-    return num1, num2 
+    return num1, num2 #returns the two randomly generated number
 
 def decideOperation(): #random operation sign
     operation = ["+", "-"] #the options for operators
@@ -60,7 +60,7 @@ def displayProblem(): #function triggers when user clicks on the button difficul
     global score, question_counter, number_of_attempts, correct_answer, question
     switch_frame(frame1) #switches to frame 1 (where the quiz takes place)
 
-    if question == False:
+    if question == False: #checks if a question is displayed
         #condition to check whether 10 questions have been displayed
         if question_counter >=10: 
             displayResults() #if ten questions have already been displayed, the results will be shown
@@ -72,6 +72,7 @@ def displayProblem(): #function triggers when user clicks on the button difficul
         #calls the functions to obtain the number and operation
         num1, num2 = randomInt(difficulty)
         operation_choice = decideOperation() 
+
         #it checks the operation and finds the right answer corresponding to the two numbers and operation
         if operation_choice == "+":
             correct_answer = num1+num2
@@ -83,6 +84,7 @@ def displayProblem(): #function triggers when user clicks on the button difficul
         progress_bar["value"] = question_counter #progress bar will increase based on the question counter number
 
         question_label.config(text= f"{num1} {operation_choice} {num2} =") #take the numbers and operations from the random module
+        lives_label.config(text=f"Lives: ❤︎⁠x2") 
 
         answer_entry.delete(0, END) #clear the content of the entry widget
         question=True
@@ -108,14 +110,92 @@ def displayProblem(): #function triggers when user clicks on the button difficul
     else:
         if number_of_attempts == 1: #another attempt to the user if the first answer is incorrect
             number_of_attempts = 2 #second attempt
+            lives_label.config(text=f"Lives: ❤︎⁠x1")
             label2.config(text="Wrong answer. Try again") #tells the user that the answer they have entered is wrong
             answer_entry.delete(0, END) #clears the answer written, sets the entry widget to blank
         else:
             label2.config(text="Wrong. No tries remaining") #moves to the next question with the help of the False boolean if the second attempt is also incorrect
             question=False
+            lives_label.config(text=f"Lives: ❤︎⁠x0")
 
     if question==False: #displays the next question when the current question is done
         displayProblem()
+
+
+# ===== LEADERBOARD FUNCTIONS =====
+def saveHighScore(score): #function will save the user's score in their run
+    username = "Guest"
+    scores_list=[]
+
+    #open the text file in read mode
+    with open("01-MathsQuiz/highscores.txt","r") as file:
+        for line in file: #reads each line in the file
+            name, final_score = line.strip().split(",")
+
+            #both the name and score is appened to the scores_list
+            scores_list.append((name, int(final_score)))
+    file.close() #file is closed
+
+    #add the new score set by the user
+    scores_list.append((username,score))
+
+    #bubble sort to sort highest to lowest
+    for x in range(len(scores_list)):
+        for y in range(x+1, len(scores_list)):
+            if scores_list[y][1] > scores_list[x][1]:
+                #swapping the positions
+                scores_list[x], scores_list[y] = scores_list[y], scores_list[x]
+
+    #keeps the top 5 scores only
+    scores_list = scores_list[:5]
+
+    #open file in write mode and saves all the five players existing
+    with open("01-MathsQuiz/highscores.txt", "w") as file:
+        for name1, score1 in scores_list:
+            file.write(name1 + "," + str(score1) +"\n") 
+
+def getHighScore():
+    scores_list=[]
+
+    #read each detail in the text file
+    with open("01-MathsQuiz/highscores.txt",'r') as file:
+        for line in file:
+            name, score = line.strip().split(",")
+            scores_list.append((name, int(score)))
+    return scores_list
+
+def quit_leaderboard():
+    leaderboard_frame.destroy() #closes the frame
+
+def displayLeaderboard():
+    global leaderboard_frame
+    leaderboard_frame = Toplevel(root)
+    leaderboard_frame.title("Leaderboard")
+    leaderboard_frame.geometry("400x400")
+    leaderboard_frame.resizable(0,0)
+
+    #display label heading 
+    Label(leaderboard_frame, text="Leaderboard ᯓ★", font=("Arial",25,"bold"), fg="black").pack()
+    scores = getHighScore() #calls the function
+    position=1 
+
+    for name1, score1 in scores:
+        ranking = str(position) + "."
+
+        #create a frame for each player
+        player_frame = Frame(leaderboard_frame, bg="#1a233b", padx=5, pady=5)
+        player_frame.pack(fill="x", padx=20, pady=5) #fills the horizontal space
+
+        #display the rank
+        Label(player_frame, text=ranking, font=("Arial",14,"bold"), bg="#1a233b", fg="white", width=4).pack(side="left")
+        Label(player_frame, text=name1, font=("Arial",14,"bold"), bg="#1a233b", fg="white").pack(side="left") #display the name
+        Label(player_frame, text=str(score1), font=("Arial",14,"bold"), bg="#1a233b", fg="white", width=4).pack(side="right") #display score
+
+        #incremement position variable for the next player
+        position+=1
+
+    Button(leaderboard_frame, text="CLOSE", font=("Arial",14,"bold"), bg="black", fg="white", padx=20, pady=5, command=quit_leaderboard).pack(pady=25)
+
 
 
 #function used to categorise the scores into grades
@@ -137,6 +217,7 @@ def displayResults():
     #displays the score and grade
     results_label.config(text=f"{score}")
     grade_label.config(text=f"You have achieved an {grade} grade")
+    saveHighScore(score) #save the high score set by the user
 
 def playAgain(): #function to ask whether the user wants to play again using message box
     answer = messagebox.askyesno("Confirm", "Do you want to play again?")
@@ -146,13 +227,14 @@ def playAgain(): #function to ask whether the user wants to play again using mes
         displayMenu()
 
 
-# ===== HEADING SECTION USING AN IMAGE AND LABEL // FRAME 1 =====
+
+# ===== HEADING SECTION USING AN IMAGE AND LABEL // MAIN FRAME =====
 def displayMenu(): #function to display difficulty level menu
     global main_frame
     main_frame = Frame(root, bg="#1b2645") #background of the main_frame
 
     img = Image.open('01-MathsQuiz/title.png') #opens the image file
-    resized_img = img.resize((420,120)) #reizes the image to 360 x 100
+    resized_img = img.resize((420,120)) #resizes the image to 420 x 120
     new_img = ImageTk.PhotoImage(resized_img)
 
     #displays the resized image with space of 20px vertically
@@ -177,6 +259,10 @@ def displayMenu(): #function to display difficulty level menu
     button2.pack(pady=5)
     button3 = Button(main_frame, text="Advanced", bg="#131c35", fg="white", width=21, font=("Courier New", 12, "bold"), command = lambda:selectedDifficulty("Advanced"))
     button3.pack(pady=5)
+
+    #button to display the leaderboard window
+    leaderboard_btn = Button(main_frame, text="View Leaderboard", bg="#131c35", fg="white", width=20, font=("Courier New", 8), command= displayLeaderboard)
+    leaderboard_btn.place(x=124.8,y=370)
 
     main_frame.place(x=0, y=0, width=400, height=400) #aligns the content on the screen
 
@@ -231,10 +317,16 @@ label2.place(y=210, x=126)
 back_button = Button(frame1, text="Back to Menu", bg="#080E1F", fg="white", font=("Roboto", 10), command=quit)
 back_button.place(x=10, y=360)
 
+#lives label which will be configurated
+lives_label = Label(frame1, text="", font= ("Roboto",11, "bold"), bg="#1b2645", fg="#FFFFFF")
+lives_label.place(x=280,y=365)
+
+
 # ===== FRAME TWO FOR THE RESULTS SECTION =====
 frame2 = Frame(root,bg="#1b2645")
 frame2.place(x=0, y=0, width=400, height=400)
 
+#images
 bg_img = Image.open('01-MathsQuiz/Background.jpg')
 resized_bg = bg_img.resize((600,650))
 bg_img1 = ImageTk.PhotoImage(resized_bg)
