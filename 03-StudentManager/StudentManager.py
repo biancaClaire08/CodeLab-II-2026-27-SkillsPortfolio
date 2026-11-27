@@ -3,6 +3,7 @@ from PIL import ImageTk, Image #import img module
 import json #import JSON module
 import tkinter.messagebox
 from tkinter import messagebox
+from tkinter import ttk
 
 root = Tk()
 root.geometry('995x640')
@@ -53,12 +54,12 @@ def view_records(students=None, display_table=True): #this function will functio
 
     if display_table==True:
         #headings for the table
-        Label(record_frame, text="Student No.", width=10).grid(row=25, column=1)
-        Label(record_frame, text="Student Name", width=14).grid(row=25, column=2)
-        Label(record_frame, text="Total Coursework Mark", width=22).grid(row=25, column=3)
-        Label(record_frame, text="Exam Mark", width=9).grid(row=25, column=4)
-        Label(record_frame, text="Overall Percentage", width=15).grid(row=25, column=5)
-        Label(record_frame, text="Grade", width=8).grid(row=25, column=6)
+        Label(record_frame, text="Student No.", width=10, bg="#919191").grid(row=25, column=1)
+        Label(record_frame, text="Student Name", width=14, bg="#919191").grid(row=25, column=2)
+        Label(record_frame, text="Total Coursework Mark", width=22, bg="#919191").grid(row=25, column=3)
+        Label(record_frame, text="Exam Mark", width=26, bg="#919191").grid(row=25, column=4)
+        Label(record_frame, text="Overall Percentage",bg="#919191", width=15).grid(row=25, column=5)
+        Label(record_frame, text="Grade", width=8, bg="#919191").grid(row=25, column=6)
 
     row = 26
     total_percentage=0
@@ -200,18 +201,18 @@ def display_record(student, score_frame):
     total_coursework, exam_mark, percentage, grade = calculate_results(student)
 
     #exact format to display the details of the student
-    Label(result_frame, text="Student No.").grid(row=1, column=0, padx=10)
-    Label(result_frame, text= student["student_id"]).grid(row=1, column=1)     
-    Label(result_frame, text="Student Name", width=22).grid(row=2, column=0)
-    Label(result_frame, text= student["student_name"]).grid(row=2, column=1)
-    Label(result_frame, text="Total Coursework Mark", width=22).grid(row=3, column=0)
-    Label(result_frame, text=total_coursework).grid(row=3, column=1)
-    Label(result_frame, text="Exam Mark", width=22).grid(row=4, column=0)
-    Label(result_frame, text=exam_mark).grid(row=4, column=1)
-    Label(result_frame, text="Overall Percentage", width=22).grid(row=5, column=0)
-    Label(result_frame, text=str(percentage) + "%").grid(row=5, column=1) 
-    Label(result_frame, text="Grade", width=22).grid(row=6, column=0)
-    Label(result_frame, text=grade).grid(row=6, column=1)
+    Label(result_frame, text="Student No.", width=24, bg="#28293D", fg="white").grid(row=1, column=0, padx=10)
+    Label(result_frame, text= student["student_id"], width=19).grid(row=1, column=1)     
+    Label(result_frame, text="Student Name", width=24, bg="#28293D", fg="white").grid(row=2, column=0)
+    Label(result_frame, text= student["student_name"], width=19).grid(row=2, column=1)
+    Label(result_frame, text="Total Coursework Mark", width=24, bg="#28293D", fg="white").grid(row=3, column=0)
+    Label(result_frame, text=total_coursework, width=19).grid(row=3, column=1)
+    Label(result_frame, text="Exam Mark", width=24, bg="#28293D", fg="white").grid(row=4, column=0)
+    Label(result_frame, text=exam_mark, width=19).grid(row=4, column=1)
+    Label(result_frame, text="Overall Percentage", width=24, bg="#28293D", fg="white").grid(row=5, column=0)
+    Label(result_frame, text=str(percentage) + "%", width=19).grid(row=5, column=1) 
+    Label(result_frame, text="Grade", width=24, bg="#28293D", fg="white").grid(row=6, column=0)
+    Label(result_frame, text=grade, width=19).grid(row=6, column=1)
 
 def highest_score(scores_frame):
     highest_score = 0
@@ -434,6 +435,30 @@ def sort_records1(reverse):
                     students[x],students[y] = students[y], students[x]
     view_records(students)
 
+def filter_students():
+    #removes the previous student record displayed
+    for table in filter_frame1.winfo_children():
+        table.destroy()
+
+    selected_grade = filter_grades.get()
+    row=30
+    students=read()
+
+    for student in students:
+        student_no=student["student_id"]
+        student_name=student["student_name"]
+        total_coursework, exam_mark, percentage, grade = calculate_results(student)
+        
+        if selected_grade == grade:
+            Label(filter_frame1, text=student_no, width=10).grid(row=row, column=1)
+            Label(filter_frame1, text=student_name, width=14).grid(row=row, column=2)
+            Label(filter_frame1, text=total_coursework, width=22).grid(row=row, column=3)
+            Label(filter_frame1, text=exam_mark, width=25).grid(row=row, column=4)
+            Label(filter_frame1, text=percentage, width=15).grid(row=row, column=5)
+            Label(filter_frame1, text=grade, width=8).grid(row=row, column=6)
+            row+=1
+
+
 
 def stats(button4, home_frame):
     button4.destroy()
@@ -493,8 +518,8 @@ def scores_page():
 def sort_page():
     delete_pages()
     sort_frame = Frame(main_frame, bg="white")
-    heading3 = Label(sort_frame, text="Sorting Student Records", font=("Arial",26, "bold"), bg="#FFFFFF", fg="black")
-    heading3.pack(anchor='w', padx=10)
+    heading2 = Label(sort_frame, text="Sorting Student Records", font=("Arial",26, "bold"), bg="#FFFFFF", fg="black")
+    heading2.pack(anchor='w', padx=10)
 
     Label(sort_frame,text="Name", font=("Times",14, "underline"), bg="#FFFFFF", fg="black").place(x=38,y=58)
     ascend = Radiobutton(sort_frame, text="Ascending", value="ascend", font=("Times", 14), fg="black", bg="white", padx=27, pady=5, command=lambda: sort_records(False))
@@ -510,6 +535,38 @@ def sort_page():
     
     sort_frame.pack(anchor='w', padx=10, pady=15)
 
+def filter_page():
+    delete_pages()
+    global filter_grades, filter_frame, filter_frame1
+    filter_frame = Frame(main_frame, bg="white")
+    heading3 = Label(filter_frame, text="Filter Records", font=("Arial",26, "bold"), bg="#FFFFFF", fg="black")
+    heading3.pack(anchor='w', padx=10)
+
+    filter_frame1 = Frame(main_frame, bg="white")
+    filter_frame2= Frame(main_frame, bg="black")
+
+    Label(filter_frame, text="Filter by Grade:", font=("Arial",12), bg="white").pack(side="left", padx=12, pady=20)
+    grades=["All Grades","A","B","C","D","F"]
+    
+    #Combobox
+    filter_grades= ttk.Combobox(filter_frame, values=grades, state="readonly") #readonly state will prevent user from typing into the combo box
+    filter_grades.set("All Grades") #option set as default selected option 
+    filter_grades.pack(side="left", padx=5)
+
+    Button(filter_frame, text="Filter", bg="#202f46", fg="white", width=7, padx=2, pady=2, command=filter_students).pack(side="right", padx=20)
+
+    img1 = Image.open('03-StudentManager/img3.jpg')
+    resized_img1 = img1.resize((900,500))
+    new_img1 = ImageTk.PhotoImage(resized_img1)
+    img_label1 = Label(filter_frame2, image = new_img1)
+    img_label1.image = new_img1
+    img_label1.pack()
+
+    filter_frame.pack(anchor='w', padx=10, pady=15)
+    filter_frame1.place(x=40,y=130, width=900, height=600)
+    filter_frame2.place(x=0, y=340, width=900, height=200)
+
+
 def delete_pages():
     for frame in main_frame.winfo_children(): #loop through the frames inside main_frame
         frame.destroy() #removes the frame from the window
@@ -519,7 +576,14 @@ def delete_pages():
 # ===== FRAMES =====
 frame = Frame(root, bg= "#162236", width=995, height=60)
 frame.pack()
-Label(root, text= "STUDENT MANAGEMENT", font=("Roboto",15, "bold"), bg= "#162236", fg="white").place(x=15, y=18)
+Label(root, text= "STUDENT MANAGEMENT", font=("Roboto",15, "bold"), bg= "#162236", fg="white").place(x=50, y=18)
+small_image = Image.open('03-StudentManager/usb.png')
+image_resized = small_image.resize((20,20))
+new_image = ImageTk.PhotoImage(image_resized)
+img_label2 = Label(root, image = new_image)
+img_label2.image = new_image
+img_label2.place(x=15, y=20)
+
 options_frame = Frame(root, bg= '#202f46', width=200, height=640) #side dashboard frame for the buttons
 options_frame.pack(side=LEFT)
 
@@ -530,24 +594,27 @@ main_frame.pack_propagate(False) #prevent the frame from automatically resizing
 
 # ===== BUTTONS =====
 home_btn = Button(options_frame, text="HOME", font=("Tahoma",14, "bold"), fg="white", bg='#202f46', bd=0, command=home_page) #bd removes the border around the button
-home_btn.place(x=20, y=30)
+home_btn.place(x=20, y=20)
 
 score_btn = Button(options_frame, text="SCORE", font=("Tahoma", 14, "bold"),fg="white", bg='#202f46', bd=0, command=scores_page)
-score_btn.place(x=20, y=90)
+score_btn.place(x=20, y=75)
 
 sort_btn = Button(options_frame, text="SORT", font=("Tahoma", 14, "bold"),fg="white", bg='#202f46', bd=0, command=sort_page)
-sort_btn.place(x=20, y=150)
+sort_btn.place(x=20, y=130)
 
-Label(options_frame, text="QUICK ACTIONS", font=("Tahoma", 13, "bold", "underline"),fg="white", bg='#202f46').place(x=20, y=215)
+filter_btn = Button(options_frame, text="FILTER", font=("Tahoma", 14, "bold"),fg="white", bg='#202f46', bd=0, command=filter_page)
+filter_btn.place(x=20, y=185)
+
+Label(options_frame, text="QUICK ACTIONS", font=("Tahoma", 13, "bold", "underline"),fg="white", bg='#202f46').place(x=20, y=260)
 
 addRecord_btn = Button(options_frame, text="ADD RECORD", font=("Tahoma", 13, "bold"),fg="white", bg='#202f46', bd=0, command=add_student)
-addRecord_btn.place(x=20, y=270)
+addRecord_btn.place(x=20, y=305)
 
 delRecord_btn = Button(options_frame, text="DEL RECORD", font=("Tahoma", 13, "bold"),fg="white", bg='#202f46', bd=0, command=delete)
-delRecord_btn.place(x=20, y=330)
+delRecord_btn.place(x=20, y=350)
 
 updateRecord_btn = Button(options_frame, text="UPDATE RECORD", font=("Tahoma", 13, "bold"),fg="white", bg='#202f46', bd=0, command=search)
-updateRecord_btn.place(x=20, y=390)
+updateRecord_btn.place(x=20, y=395)
 
 img1 = Image.open('03-StudentManager/img2.png')
 resized_img1 = img1.resize((180,150))
