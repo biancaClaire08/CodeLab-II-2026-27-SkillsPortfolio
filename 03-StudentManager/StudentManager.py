@@ -1,6 +1,9 @@
+# ===== IMPORTING MODULES =====
 from tkinter import * #import tkinter
 from PIL import ImageTk, Image #import img module
 import json #import JSON module
+
+#importing messagebox and ttk
 import tkinter.messagebox
 from tkinter import messagebox
 from tkinter import ttk
@@ -10,7 +13,7 @@ root.geometry('995x640')
 #avoid resizing the window
 root.resizable(0,0)
 root.title('Student Manager')
-root.iconbitmap('./03-StudentManager/icon3.ico')
+root.iconbitmap('./03-StudentManager/icon3.ico') #the icon for the image
 
 # ===== FUNCTIONS INVOLVING JSON FILE AND IN THE HOME SECTION OF THE WINDOW =====
 #open and reads the JSON file
@@ -52,8 +55,9 @@ def view_records(students=None, display_table=True): #this function will functio
     else:
         student_list = students
 
+    #if the parameter passes TRUE, it will display the table
     if display_table==True:
-        #headings for the table
+        #headings for the table, aligned using grid
         Label(record_frame, text="Student No.", width=10, bg="#919191").grid(row=25, column=1)
         Label(record_frame, text="Student Name", width=14, bg="#919191").grid(row=25, column=2)
         Label(record_frame, text="Total Coursework Mark", width=22, bg="#919191").grid(row=25, column=3)
@@ -61,9 +65,10 @@ def view_records(students=None, display_table=True): #this function will functio
         Label(record_frame, text="Overall Percentage",bg="#919191", width=15).grid(row=25, column=5)
         Label(record_frame, text="Grade", width=8, bg="#919191").grid(row=25, column=6)
 
-    row = 26
+    row = 26 #starting row line 
     total_percentage=0
 
+    #loop through the entire student_list
     for student in student_list:
         student_no = student["student_id"]
         student_name = student["student_name"]
@@ -85,21 +90,21 @@ def view_records(students=None, display_table=True): #this function will functio
         #counting the number of students using len 
         number_of_students = len(data["Student Details"])
         #average of percentage
-        average = total_percentage / number_of_students 
-        
+        average = total_percentage / number_of_students       
 
-
+#function to search student using ID
 def search_student(id_entry):
-    student_id_entered = id_entry.get()
-    student_found = False
+    student_id_entered = id_entry.get() #takes the student ID entered by the user and stores it in the variable
+    student_found = False 
     student_details = None #no student details stored
 
+    #compares the student id enterd with the available student IDs in the table
     for student in data["Student Details"]:
-        if str(student["student_id"]) == student_id_entered:
-            student_found = True
-            student_details = student
+        if str(student["student_id"]) == student_id_entered: 
+            student_found = True #set to True if the ID has been found
+            student_details = student #stores the details of that student found
             break
-    if student_found == False:
+    if student_found == False: #if not found, a message box is displayed to inform the user
         messagebox.showinfo("Invalid", "Student not found")
 
     if student_found == True:
@@ -124,11 +129,13 @@ def search_student(id_entry):
         Label(search_frame, text="Grade", width=22).grid(row=6, column=0)
         Label(search_frame, text=grade).grid(row=6, column=1)
 
+#searching student with their name (similar concept has been used based on the function above this)
 def search_student1(name_entry):
     student_name_entered = name_entry.get()
     student_found = False
     student_details = None #no student details stored
 
+    #if no name has been entered, messagebox will display the relevant message
     if student_name_entered.strip() == "":
         messagebox.showinfo("Error", "Please enter a Name")
         return
@@ -163,7 +170,6 @@ def search_student1(name_entry):
         Label(search_frame, text="Grade", width=22).grid(row=6, column=0)
         Label(search_frame, text=grade).grid(row=6, column=1)
 
-     
 
 def individual_record_ID():
     global search_frame 
@@ -171,11 +177,13 @@ def individual_record_ID():
     search_frame = Toplevel(root)
     search_frame.title("Searching Record")
     search_frame.geometry("500x200")
-    search_frame.resizable(0,0)
-    
+    search_frame.resizable(0,0) #prevents user from resizing the window
+
+    #labels to display information and entry for the user to enter the ID
     id_label = Label(search_frame, text="Enter Student ID:", anchor='w').grid(row=0, column=0, padx=10, pady=10)
     id_entry = Entry(search_frame, width=30)
     id_entry.grid(row=0, column=1, padx=10, pady=10)
+    #search button which will trigger the function
     search_btn = Button(search_frame, text="Search Student ID", font=("bold",8), width=16, bg="#162236", fg="white", command=lambda: search_student(id_entry))
     search_btn.grid(row=0, column=2, padx=15)
 
@@ -193,11 +201,30 @@ def individual_record_Name():
     search_btn = Button(search_frame, text="Search Student Name", font=("bold",8), width=17, bg="#162236", fg="white", command=lambda: search_student1(name_entry))
     search_btn.grid(row=0, column=2, padx=15)
 
+#statistics function to display the stats overall
+def stats(button4, home_frame):
+    button4.destroy() #button destroys after user clicks it\
+
+    #background frame, set with a different colour
+    frame_bg1=Frame(home_frame, bg="#2F3845", width=175, height=130)
+    frame_bg1.place(x=400,y=70)
+    frame_bg2=Frame(home_frame, bg="#2F3845", width=164, height=130)
+    frame_bg2.place(x=585,y=70)
+
+    view_records(display_table=False) #set to False to prevent the entire table from displaying
+    #shows the relevant information with the help of labels
+    Label(frame_bg1, text="Total Number \n of Students", font=("Arial",16,"bold"), bg="#2F3845", fg="white", justify="left").place(relx=0.06,rely=0.1)
+    Label(frame_bg1, text=number_of_students, font=("Arial",12), bg="#2F3845", fg="white", justify="left").place(relx=0.1,rely=0.6)
+    Label(frame_bg2, text="Average Score", font=("Arial",15,"bold"), bg="#2F3845", fg="white", justify="left").place(relx=0.06,rely=0.1)
+    Label(frame_bg2, text=str(average) + "%", font=("Arial",12), bg="#2F3845", fg="white", justify="left").place(relx=0.1,rely=0.6)
+
+
 
 # ===== FUNCTION INVOLVING STUDENT SCORES FOR HIGHEST AND LOWEST =====
 def display_record(student, score_frame):
     result_frame = Frame(score_frame)
     result_frame.pack(pady=25)
+    #obtains the information from the function alrady declared and stores them in the appropriate variables
     total_coursework, exam_mark, percentage, grade = calculate_results(student)
 
     #exact format to display the details of the student
@@ -215,7 +242,7 @@ def display_record(student, score_frame):
     Label(result_frame, text=grade, width=19).grid(row=6, column=1)
 
 def highest_score(scores_frame):
-    highest_score = 0
+    highest_score = 0 #initialise highest_score
     highest_student = None
 
     for student in data["Student Details"]:
@@ -241,6 +268,7 @@ def lowest_score(scores_frame):
             lowest_score = total_score
             lowest_student = student
     display_record(lowest_student, scores_frame)
+
 
 
 # ===== TEXT FILE RELATED FUNCTION (RELATED TO ITEMS 6,7 AND 8) =====
@@ -460,18 +488,7 @@ def filter_students():
 
 
 
-def stats(button4, home_frame):
-    button4.destroy()
-    frame_bg1=Frame(home_frame, bg="#2F3845", width=175, height=130)
-    frame_bg1.place(x=400,y=70)
-    frame_bg2=Frame(home_frame, bg="#2F3845", width=164, height=130)
-    frame_bg2.place(x=585,y=70)
 
-    view_records(display_table=False)
-    Label(frame_bg1, text="Total Number \n of Students", font=("Arial",16,"bold"), bg="#2F3845", fg="white", justify="left").place(relx=0.06,rely=0.1)
-    Label(frame_bg1, text=number_of_students, font=("Arial",12), bg="#2F3845", fg="white", justify="left").place(relx=0.1,rely=0.6)
-    Label(frame_bg2, text="Average Score", font=("Arial",15,"bold"), bg="#2F3845", fg="white", justify="left").place(relx=0.06,rely=0.1)
-    Label(frame_bg2, text=str(average) + "%", font=("Arial",12), bg="#2F3845", fg="white", justify="left").place(relx=0.1,rely=0.6)
 
 
 # ===== FUNCTIONS FOR FRAMES =====
