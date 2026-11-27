@@ -17,8 +17,10 @@ root.iconbitmap('./02-AlexaTellMeAJoke/icon2.ico') #icon for window
 setup = []
 punchline = []
 
+# ===== FUNCTIONS =====
 #function to load the jokes from the text file
 def jokes():
+    #open the file as reading mode
     with open("./02-AlexaTellMeAJoke/randomJokes.txt","r") as file:
         for line in file:
             sentence = line.split('?') #retrieve each line and split it using the question mark sign
@@ -39,15 +41,17 @@ def typingEffect(text, index=0):
         root.after(80, typingEffect, text, index+3)
 
 index = 0
+
 #function to tell the joke, display the setup
 def tell_joke():
-    global index
+    global index #allow variable to be accessed and modified
     #randomly generate an integer number
     index = random.randint(0, len(setup) -1) #List indexing, -1 is included since Python starts from 0
 
     #display the setup of the joke
     setup_label.config(text="")
-    typingEffect(setup[index]) 
+    typingEffect(setup[index]) #call the typingEffect function on the setup_label
+
     punchline_label.config(text="") #clears the previous punchline displayed
 
 #function to close the window
@@ -75,6 +79,7 @@ resized_img = img.resize((550,450))
 bg_img = ImageTk.PhotoImage(resized_img)
 bg_label = Label(root, image=bg_img)
 bg_label.place(x=0, y=0)
+
 
 #title displayed using label
 title = Label(root,text="ALEXA'S JOKES", font=("Courier",24,"bold"), bg="#ece4d9", fg="black")
