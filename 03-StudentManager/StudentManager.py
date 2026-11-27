@@ -98,7 +98,7 @@ def search_student(id_entry):
     student_found = False 
     student_details = None #no student details stored
 
-    #compares the student id enterd with the available student IDs in the table
+    #compares the student id entered with the available student IDs in the table
     for student in data["Student Details"]:
         if str(student["student_id"]) == student_id_entered: 
             student_found = True #set to True if the ID has been found
@@ -271,7 +271,7 @@ def lowest_score(scores_frame):
 
 
 
-# ===== TEXT FILE RELATED FUNCTION (RELATED TO ITEMS 6,7 AND 8) =====
+# ===== TEXT FILE RELATED FUNCTION (RELATED TO ITEMS 6,7 AND 8) QUICK ACTION SECTION=====
 def add_student_details(new_id, new_name, new_mark1, new_mark2, new_mark3, new_examMark, frame1):
     #append the text file without overwriting the current information in the file
     with open('./03-StudentManager/student.txt', 'a') as file:
@@ -279,6 +279,7 @@ def add_student_details(new_id, new_name, new_mark1, new_mark2, new_mark3, new_e
                    new_mark2.get() + "," + new_mark3.get() + "," + new_examMark.get() + "\n") #new student data is added to the file (same format as the rest of the students)
     messagebox.showinfo("","Student has been successfully added")
 
+#frame for adding a student
 def add_student():
     frame1 = Toplevel(root)
     frame1.title("Add a Student")
@@ -307,9 +308,11 @@ def add_student():
 
     Button(frame1, text="Add Student", font=("bold",10), width=18, bg="#17243a", fg="white", command=lambda: add_student_details(new_id, new_name, new_mark1, new_mark2, new_mark3, new_examMark, frame1)).grid(row=7, column=0, columnspan=2, pady=8)
 
+
+#read the text file
 def read():
-    students = []
-    with open('./03-StudentManager/student.txt','r') as file:
+    students = [] #empty list
+    with open('./03-StudentManager/student.txt','r') as file: #read the text file
         for line in file:
             details=line.strip().split(",") #.strip() gets rid of unwanted characters on both ends 
 
@@ -325,6 +328,8 @@ def read():
             students.append(student) #append the data into the students array
     return students
 
+
+#function to delete a student record
 def delete():
     frame2 = Toplevel(root)
     frame2.title("Delete a Student Record")
@@ -363,6 +368,8 @@ def delete_confirmation(studentID_entry, frame2):
 
         messagebox.showinfo("", "Student record has been successfuly deleted")
 
+
+#function to search for a student using the ID
 def search():
     frame2 = Toplevel(root)
     frame2.title("Search Student")
@@ -377,6 +384,7 @@ def search():
 def update(student,student_id,name,marks1,marks2,marks3,exam_marks,update_frame,frame2):
     with open('./03-StudentManager/student.txt','r') as file:
         file_content = file.read()
+        #takes the new information entered by the user and stores them in variables
         new_marks1 = int(marks1.get())
         new_marks2 = int(marks2.get())
         new_marks3 = int(marks3.get())
@@ -401,7 +409,7 @@ def enter_updated_records(studentID_entry1, frame2):
     student_id = studentID_entry1.get()
 
     for student in students:
-        if student["student_id"].strip() == student_id:
+        if student["student_id"].strip() == student_id: #check if student id exists
             student_found = True
             update_frame = Toplevel(frame2)
             update_frame.title("Update Student Record")
@@ -431,28 +439,33 @@ def enter_updated_records(studentID_entry1, frame2):
     if student_found == False:
         messagebox.showinfo("Error", "No student found with that ID")
 
-def sort_records(reverse):
+
+
+# ===== SORTING RECORDS SECTION =====
+def sort_records(reverse): #sorting by name
     students = []
     for student in data["Student Details"]:
         students.append(student)
 
-    #bubble sort
+    #bubble sort to sort the records
     for x in range(len(students)):
         for y in range(x+1, len(students)):
             if reverse == False:
+                #sort in ascendng order (lowewst to highest)
                 if students[x]["student_name"] > students[y]["student_name"]:
                     students[x],students[y] = students[y], students[x] #swap the places
             else:
+                #descending order(highest to lowest)
                 if students[x]["student_name"] < students[y]["student_name"]:
                     students[x],students[y] = students[y], students[x]
     view_records(students)
 
-def sort_records1(reverse):
+def sort_records1(reverse): #sorting by ID
     students = []
     for student in data["Student Details"]:
         students.append(student)
 
-    #bubble sort
+    #bubble sort to sort records 
     for x in range(len(students)):
         for y in range(x+1, len(students)):
             if reverse == False:
@@ -463,13 +476,16 @@ def sort_records1(reverse):
                     students[x],students[y] = students[y], students[x]
     view_records(students)
 
+
+
+# ===== FILTER SECTION =====
 def filter_students():
     #removes the previous student record displayed
     for table in filter_frame1.winfo_children():
         table.destroy()
 
-    selected_grade = filter_grades.get()
-    row=30
+    selected_grade = filter_grades.get() #takes the grade selected in the combo box
+    row=30 #starting row line
     students=read()
 
     for student in students:
@@ -488,23 +504,22 @@ def filter_students():
 
 
 
-
-
-
 # ===== FUNCTIONS FOR FRAMES =====
 def home_page():
     delete_pages()
     home_frame = Frame(main_frame, bg="white")
     heading = Label(home_frame, text="Home", font=("Arial",26, "bold"), bg="#FFFFFF", fg="black")
     heading.pack(anchor='w', padx=10) #aligns the text to the left with spacing on the x-axis
-    
+
+    #buttons which performs their relevant function
     button1 = Button(home_frame, text="View all student records", font=("Times", 12), bg="black", fg="#FFFFFF", padx=27, pady=5, width=30, command=view_records)
     button1.pack(anchor='w', padx=10, pady=(15,12))
     button2 = Button(home_frame, text="View individual student record by ID", font=("Times", 12), bg="black", fg="#FFFFFF", padx=27, pady=5, width=30, command=individual_record_ID)
     button2.pack(anchor='w', padx=10, pady=(0,12))
     button3 = Button(home_frame, text="View individual student record by Name", font=("Times", 12), bg="black", fg="#FFFFFF", padx=27, pady=5, width=30, command=individual_record_Name)
     button3.pack(anchor='w', padx=10)
-    
+
+    #background color and length
     frame_bg=Frame(home_frame, bg="#222A37", width=370, height=150)
     frame_bg.place(x=390,y=60)
     button4 = Button(home_frame, text="Extra Information", font=("Times", 12), bg="black", fg="#FFFFFF", padx=27, pady=5, width=20, command=lambda: stats(button4, home_frame))
@@ -523,8 +538,9 @@ def scores_page():
     button2 = Button(scores_frame, text="Lowest Scoring Student", font=("Times", 14), bg="black", fg="#FFFFFF", padx=27, pady=5, width=30, command=lambda: lowest_score(scores_frame))
     button2.pack(anchor='w', padx=10)
 
+    #image
     img = Image.open('03-StudentManager/img1.png')
-    resized_img = img.resize((300,280))
+    resized_img = img.resize((300,280)) #resizing the image
     new_img = ImageTk.PhotoImage(resized_img)
     img_label = Label(main_frame, image = new_img, bg="white")
     img_label.image = new_img
@@ -538,6 +554,7 @@ def sort_page():
     heading2 = Label(sort_frame, text="Sorting Student Records", font=("Arial",26, "bold"), bg="#FFFFFF", fg="black")
     heading2.pack(anchor='w', padx=10)
 
+    #making use of radio buttons for user to select between the four options available
     Label(sort_frame,text="Name", font=("Times",14, "underline"), bg="#FFFFFF", fg="black").place(x=38,y=58)
     ascend = Radiobutton(sort_frame, text="Ascending", value="ascend", font=("Times", 14), fg="black", bg="white", padx=27, pady=5, command=lambda: sort_records(False))
     ascend.pack(anchor='w', padx=10, pady=(40,10))
@@ -559,19 +576,21 @@ def filter_page():
     heading3 = Label(filter_frame, text="Filter Records", font=("Arial",26, "bold"), bg="#FFFFFF", fg="black")
     heading3.pack(anchor='w', padx=10)
 
+    #used separate frames to avoid the confliction between .pack and .grid
     filter_frame1 = Frame(main_frame, bg="white")
     filter_frame2= Frame(main_frame, bg="black")
 
     Label(filter_frame, text="Filter by Grade:", font=("Arial",12), bg="white").pack(side="left", padx=12, pady=20)
-    grades=["All Grades","A","B","C","D","F"]
+    grades=["All Grades","A","B","C","D","F"] #options
     
-    #Combobox
+    #Combobox to let the user select between the available options
     filter_grades= ttk.Combobox(filter_frame, values=grades, state="readonly") #readonly state will prevent user from typing into the combo box
     filter_grades.set("All Grades") #option set as default selected option 
     filter_grades.pack(side="left", padx=5)
 
     Button(filter_frame, text="Filter", bg="#202f46", fg="white", width=7, padx=2, pady=2, command=filter_students).pack(side="right", padx=20)
 
+    #image placed and handles withing filter_frame2
     img1 = Image.open('03-StudentManager/img3.jpg')
     resized_img1 = img1.resize((900,500))
     new_img1 = ImageTk.PhotoImage(resized_img1)
@@ -594,7 +613,7 @@ def delete_pages():
 frame = Frame(root, bg= "#162236", width=995, height=60)
 frame.pack()
 Label(root, text= "STUDENT MANAGEMENT", font=("Roboto",15, "bold"), bg= "#162236", fg="white").place(x=50, y=18)
-small_image = Image.open('03-StudentManager/usb.png')
+small_image = Image.open('03-StudentManager/usb.png') #image
 image_resized = small_image.resize((20,20))
 new_image = ImageTk.PhotoImage(image_resized)
 img_label2 = Label(root, image = new_image)
@@ -602,7 +621,7 @@ img_label2.image = new_image
 img_label2.place(x=15, y=20)
 
 options_frame = Frame(root, bg= '#202f46', width=200, height=640) #side dashboard frame for the buttons
-options_frame.pack(side=LEFT)
+options_frame.pack(side=LEFT) #position frame to the left
 
 main_frame = Frame(root, bg="#FFFFFF", width=995, height=640) #frame to display the main content
 main_frame.pack(side=LEFT) #positioning of main_frame will be beside the option_frame on the available space
@@ -622,6 +641,7 @@ sort_btn.place(x=20, y=130)
 filter_btn = Button(options_frame, text="FILTER", font=("Tahoma", 14, "bold"),fg="white", bg='#202f46', bd=0, command=filter_page)
 filter_btn.place(x=20, y=185)
 
+#label heading
 Label(options_frame, text="QUICK ACTIONS", font=("Tahoma", 13, "bold", "underline"),fg="white", bg='#202f46').place(x=20, y=260)
 
 addRecord_btn = Button(options_frame, text="ADD RECORD", font=("Tahoma", 13, "bold"),fg="white", bg='#202f46', bd=0, command=add_student)
@@ -641,5 +661,5 @@ img_label1.image = new_img1
 img_label1.place(x=7.5,y=450)
 
 
-home_page()
+home_page() #initially calls the home page
 root.mainloop()
